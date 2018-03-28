@@ -142,6 +142,9 @@ public class PartyVO {
 		this.listLink = listLink;
 		this.listNode = listNode;
 	}
+	public PartyVO(int targetId) {
+		this.id = targetId;
+	}
 	@Override
 	public String toString() {
 		return "PartyVO [id=" + id + ", name=" + name + ", loginId=" + loginId + ", loginPwd=" + loginPwd + ", cash="

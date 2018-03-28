@@ -32,13 +32,6 @@ public class PartyLocationDAO {
 		java.sql.Timestamp dt4Table = new java.sql.Timestamp(dateCriteria.getTime());
 		mybatis.update("PartyLocationDAO.targeting", dt4Table);
 		List<PartyVO> ret = mybatis.selectList("PartyLocationDAO.getLocationList", dt4Table);
-		for(PartyVO pvo : ret) {
-			for(PartyLocationVO plvo : pvo.getListLoc()) {
-//				System.out.println(plvo.getGeoLocation());
-			}
-		}
-		System.out.println("log[PartyLocationDAO]  ret.size() : " + ret.size());
-		mybatis.delete("PartyLocationDAO.deleteTarget", dt4Table);
 
 		return ret;
 	}

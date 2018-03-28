@@ -29,7 +29,7 @@
 	<select id="getPartyLocationList" parameterType="hashmap" resultMap="PartyLocationResultSet">
 		<![CDATA[
  			SELECT * FROM cur_location 
-			WHERE party_id=#{partyId} AND detect_time >= #{startDate} AND (detect_time < to_timestamp('${endDate}', 'YYYY-MM-DD') + interval '1 day')
+			WHERE party_id=#{partyId} AND detect_time >= #{startDate} AND detect_time < #{endDate}
 			ORDER BY detect_time
  		]]> 
 	</select>

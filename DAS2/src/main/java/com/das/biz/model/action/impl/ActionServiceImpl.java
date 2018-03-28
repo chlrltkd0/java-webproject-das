@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.das.analyzer.DayAnalyzer;
 import com.das.biz.model.action.ActionService;
 import com.das.biz.model.action.Moving;
 import com.das.biz.model.action.Staying;
@@ -17,6 +18,8 @@ public class ActionServiceImpl implements ActionService {
 	
 	@Autowired
 	private ActionDAO actionDAO;
+	@Autowired
+	private DayAnalyzer dAnalyzer;
 
 	@Override
 	public int insertMovingList(PartyVO pvo, List<Moving> moving) {
@@ -55,6 +58,16 @@ public class ActionServiceImpl implements ActionService {
 	@Override
 	public List<Moving> getMovingWithStayingList(PartyVO pvo, Date startDate, Date endDate) {
 		return actionDAO.getMovingWithStayingList(pvo, startDate, endDate);
+	}
+
+	@Override
+	public void dayAnalysis(int targetId, PartyVO pvo, Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1);
+		Date endDate = new Date(cal.getTime().getTime());
+		
+		dAnalyzer.dayAnalysis(new PartyVO(targetId), date, endDate);
 	}
 
 }

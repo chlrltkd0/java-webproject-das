@@ -31,39 +31,14 @@ public class DayAnalyzer {
 	static final int MOVING_STANDARDS = 4;
 	
 	public void dayAnalysis(PartyVO pvo, Date startDate, Date endDate) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(2018, 2, 27);
-		
-		Date sd = new Date(cal.getTime().getTime());
-		Date ed = new Date(cal.getTime().getTime());
 
-		pvo.setListLoc(pService.getPartyLocationList(pvo, sd, ed));
+		pvo.setListLoc(pService.getPartyLocationList(pvo, startDate, endDate));
 		List<Moving> todayMovingList = new ArrayList<>();
 		List<Staying> todayStayingList = new ArrayList<>();
 		List<Action> todayActionList;
 		
-		System.out.println(pvo.getListLoc().size());
-		
-		
-		
 		todayActionList = createActionList(pvo.getListLoc());
 		createMovingStayingList(todayActionList, todayMovingList, todayStayingList);
-//		System.out.println(todayActionList);
-//		System.out.println(todayMovingList);
-//		System.out.println(todayStayingList);
-//		
-//		System.out.println("-----------------------------------------------");
-//		for(Action action : todayActionList) {
-//			System.out.println("Action : " + action);
-//		}
-//		System.out.println("-----------------------------------------------");
-//		for(Staying staying : todayStayingList) {
-//			System.out.println("Staying : " + staying);
-//		}
-//		System.out.println("-----------------------------------------------");
-//		for(Moving moving : todayMovingList) {
-//			System.out.println("Moving : " + moving);
-//		}
 		
 		aService.insertMovingList(pvo, todayMovingList);
 		aService.insertStayingList(pvo, todayStayingList);

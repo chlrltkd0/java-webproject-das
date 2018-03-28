@@ -1,18 +1,19 @@
 package com.das.biz.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.das.biz.commandobject.InsertPatternCMD;
+import com.das.biz.model.action.ActionService;
 import com.das.biz.model.party.PartyAndLocationCMD;
 import com.das.biz.model.party.PartyService;
 import com.das.biz.model.party.PartyVO;
@@ -27,6 +28,8 @@ public class PatternController {
 	PatternService pService;
 	@Autowired
 	PartyService paService;
+	@Autowired
+	ActionService aService;
 	
 	@RequestMapping("insertLocation.do")
 	@ResponseBody
@@ -64,8 +67,10 @@ public class PatternController {
 	
 	@RequestMapping("analysis.do")
 	@ResponseBody
-	public boolean anlaysis(HttpSession session) {
+	public void anlaysis(
+			@RequestParam(value="partyId")int targetId,
+			@RequestParam(value="date")Date date, HttpSession session) {
 		PartyVO pvo = (PartyVO)session.getAttribute("party");
-		return pService.anlaysis(pvo);
+		aService.dayAnalysis(targetId, pvo, date);
 	}
 }
