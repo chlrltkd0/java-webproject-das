@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ActionDAO">
+
+	<insert id="insertMovingList" parameterType="hashmap">
+		<![CDATA[
+ 			INSERT INTO moving values 
+ 		]]> 
+ 		<foreach collection="list" item="moving" index="index" separator=",">
+			<![CDATA[
+            	(#{moving.id}, #{partyId}, #{moving.startTime}, #{moving.endTime}, #{moving.fromStaying.id}, #{moving.toStaying.id})
+            ]]>
+        </foreach>
+	</insert>
+	
+	<insert id="insertStayingList" parameterType="hashmap">
+		<![CDATA[
+ 			INSERT INTO staying values 
+ 		]]> 
+ 		<foreach collection="list" item="staying" index="index" separator=",">
+			<![CDATA[
+            	(#{staying.id}, #{partyId}, #{staying.startTime}, #{staying.endTime}, #{staying.location.address}, #{staying.location.latitude}, #{staying.location.longitude})
+            ]]>
+        </foreach>
+	</insert>
+	
+	<select id="genId" resultType="int">
+		<![CDATA[
+ 			SELECT nextval('seq4Action')
+ 		]]> 
+	</select>
+	
+	<select id="getMovingList" parameterType="hashmap" resultMap="MovingResultSet">
+		<![CDATA[
+ 			SELECT * FROM moving WHERE id=#{id}
+ 		]]> 
+	</select>
+	
+	<select id="getStayingList" resultMap="StayingResultSet">
+		<![CDATA[
+ 			SELECT * FROM staying WHERE id=#{id}
+ 		]]> 
+	</select>
+	
+	<select id="getMovingWithStayingList" resultMap="MovingWithStayingResultSet">
+		<![CDATA[
+ 			SELECT m.id as m_id,
+ 				m.party_id as m_party_id, 
+ 				m.start_time as start_time,
+ 				m.end_time as end_time,
+ 				s1.id as s1_id,
+ 				s1.party_id as s1_party_id,
+ 				s1.start_time as s1_start_time,
+ 				s1.end_time as s1_end_time,
+ 				s1.address as s1_address,
+ 				s1.latitude as s1_latitude,
+ 				s1.longitude as s1_longitude,
+ 				s2.id as s2_id,
+ 				s2.party_id as s2_party_id,
+ 				s2.start_time as s2_start_time,
+ 				s2.end_time as s2_end_time,
+ 				s2.address as s2_address,
+ 				s2.latitude as s2_latitude,
+ 				s2.longitude as s2_longitude
+ 			FROM (SELECT * FROM moving WHERE party_id=#{partyId} AND start_time >= #{startDate} AND end_time < #{endDate}) AS m 
+ 				JOIN (SELECT * FROM staying WHERE party_id=#{partyId} AND start_time >= #{startDate} AND end_time < #{endDate}) as s1 ON (m.from_staying_id=s1.id)
+ 				JOIN (SELECT * FROM staying WHERE party_id=#{partyId} AND start_time >= #{startDate} AND end_time < #{endDate}) as s2 ON (m.to_staying_id=s2.id)
+ 		]]> 
+	</select>
+	
+	<resultMap type="Moving" id="MovingWithStayingResultSet">
+		<id property="id" column="m_id" />
+<!-- 		<result property="partyId" column="m_party_id" /> -->
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<association property="fromStaying" javaType="Staying">
+			<id property="id" column="s1_id" />
+<!-- 			<result property="partyId" column="s1_party_id" /> -->
+			<result property="startTime" column="s1_start_time" />
+			<result property="endTime" column="s1_end_time" />
+			<association property="location" javaType="LocationVO">
+				<result property="address" column="s1_address" />
+				<result property="latitude" column="s1_latitude" />
+				<result property="longitude" column="s1_longitude" />
+			</association>
+		</association>
+		<association property="toStaying" javaType="Staying">
+			<id property="id" column="s2_id" />
+<!-- 			<result property="partyId" column="s2_party_id" /> -->
+			<result property="startTime" column="s2_start_time" />
+			<result property="endTime" column="s2_end_time" />
+			<association property="location" javaType="LocationVO">
+				<result property="address" column="s2_address" />
+				<result property="latitude" column="s2_latitude" />
+				<result property="longitude" column="s2_longitude" />
+			</association>
+		</association>
+	</resultMap>
+	
+	<resultMap type="Moving" id="MovingResultSet">
+		<id property="id" column="id" />
+		<result property="partyId" column="party_id" />
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<result property="fromStayingId" column="from_staying_id" />
+		<result property="toStayingId" column="to_staying_id" />
+	</resultMap>
+	
+	<resultMap type="Staying" id="StayingResultSet">
+		<id property="id" column="id" />
+		<result property="partyId" column="party_id" />
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<result property="address" column="address" />
+		<result property="latitude" column="latitude" />
+		<result property="longitude" column="longitude" />
+	</resultMap>
+
+</mapper>

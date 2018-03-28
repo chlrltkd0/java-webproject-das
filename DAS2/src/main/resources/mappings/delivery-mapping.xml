@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DeliveryDAO">
+
+	<insert id="insertDelivery" parameterType="DeliveryVO">
+		<![CDATA[
+			INSERT INTO delivery (id, sender_id, receiver_id, sending_loc, sending_latitude, sending_longitude, receiving_loc, receiving_latitude, receiving_longitude, sending_dt, receiving_dt,
+			charge_amt, sending_type, receiving_type, item_type, item_width, item_length, item_height, item_weight, item_value) 
+			VALUES (#{id}, #{senderId}, #{receiverId}, #{sendingLoc}, #{sendingLatitude}, #{sendingLongitude}, #{receivingLoc}, #{receivingLatitude}, #{receivingLongitude}, now(), now(),
+			#{chargeAmt}, #{sendingType}, #{receivingType}, #{itemType}, #{itemWidth}, #{itemLength}, #{itemHeight}, #{itemWeight}, #{itemValue})
+		]]>
+	</insert>
+	
+	<insert id="insertDeliveryImg" parameterType="DeliveryImgVO">
+		<![CDATA[
+			INSERT INTO deliveryimg (delivery_id, img_name) values
+			(#{deliveryId}, #{imgName})
+		]]>
+	</insert>
+	
+			 
+	<insert id="insertSending" parameterType="DeliveryVO">
+		<![CDATA[
+			INSERT INTO sending (id, sending_dt, sender_confirm, deliverer_confirm, security_info)
+			 values(#{id}, now(), false, false, null)
+		]]>
+	</insert>
+	
+	<insert id="insertReceiving" parameterType="DeliveryVO">
+		<![CDATA[
+			INSERT INTO receiving (id, receiving_dt, receiver_confirm, deliverer_confirm, security_info)
+			 values(#{id}, now(), false, false, null)
+		]]>
+	</insert>
+	
+	<delete id="deleteDelivery" parameterType="DeliveryVO">
+		<![CDATA[
+			DELETE FROM delivery WHERE
+			id = #{id}
+		]]>
+	</delete>
+	
+	<insert id="insertDelivererApplication" parameterType="DeliveryVO">
+		<![CDATA[
+			INSERT INTO deliverer_application values (#{id}, #{delivererId})
+		]]>
+	</insert>
+	
+	<update id="updateDelivererId" parameterType="DeliveryVO">
+		<![CDATA[
+			UPDATE delivery
+			SET
+			deliverer_id=#{delivererId}
+			WHERE
+			id = #{id} and deliverer_id is null
+		]]>
+	</update>
+	
+	<update id="confirmSendingForSender" parameterType="DeliveryVO">
+		<![CDATA[
+			UPDATE sending SET sending_dt=now(), sender_confirm=true WHERE id=#{id} AND sender_confirm=false
+		]]>
+	</update>
+	
+	<update id="confirmSendingForDeliverer" parameterType="DeliveryVO">
+		<![CDATA[
+			UPDATE sending SET sending_dt=now(), deliverer_confirm=true WHERE id=#{id} AND deliverer_confirm=false
+		]]>
+	</update>
+	
+	<update id="confirmReceivingForDeliverer" parameterType="DeliveryVO">
+		<![CDATA[
+			UPDATE receiving SET receiving_dt=now(), deliverer_confirm=true WHERE id=#{id} AND deliverer_confirm=false
+		]]>
+	</update>
+	
+	<update id="confirmReceivingForReceiver" parameterType="DeliveryVO">
+		<![CDATA[
+			UPDATE receiving SET receiving_dt=now(),receiver_confirm=true WHERE id=#{id} AND receiver_confirm=false
+		]]>
+	</update>
+	
+	<select id="nextVal" resultType="int">
+	<![CDATA[
+		select nextval('seq4Delivery')
+	]]>
+	</select>
+	
+	<select id="getPartyListInDeliveryRange" parameterType="DeliveryVO" resultMap="PartyResultSet">
+	<![CDATA[
+		SELECT party.*, party.id as p_id FROM (SELECT * FROM party WHERE party.grade = #{grade}) as party JOIN (
+			SELECT *, pl.party_id as lp_id FROM pattern_link AS pl JOIN pattern_node AS pn1 ON pl.from_node_id=pn1.id 
+				JOIN pattern_node AS pn2 ON pl.to_node_id=pn2.id 
+					WHERE (pn1.latitude-0.01 <= #{sendingLatitude} and pn1.latitude+0.01 >= #{sendingLatitude})AND
+					(pn1.longitude-0.01 <= #{sendingLongitude} and pn1.longitude+0.01 >= #{sendingLongitude}) AND
+					(pn2.latitude-0.01 <= #{receivingLatitude} and pn2.latitude+0.01 >= #{sendingLatitude}) AND
+					(pn2.longitude-0.01 <= #{receivingLongitude} and pn2.longitude+0.01 >= #{sendingLongitude})) 
+		AS pattern ON party.id=pattern.lp_id
+		
+	]]>
+	</select>
+	
+	<select id="getDeliveryInMyPattern" parameterType="PartyVO" resultMap="DeliveryResultSet">
+	<![CDATA[
+		SELECT * FROM (
+			SELECT pn1.latitude slatitude, pn1.longitude slongitude, 
+			pn2.latitude rlatitude, pn2.longitude rlongitude FROM 
+				(SELECT * FROM pattern_link WHERE party_id=#{id}) pl 
+			JOIN pattern_node pn1 ON (pl.from_node_id=pn1.id) 
+			JOIN pattern_node pn2 ON (pl.to_node_id=pn2.id)) AS pattern JOIN (SELECT * FROM delivery WHERE deliverer_id IS NULL) AS delivery	
+		ON (delivery.sending_latitude BETWEEN pattern.slatitude-0.01 AND pattern.slatitude+0.01) 
+		AND (delivery.sending_longitude BETWEEN pattern.slongitude-0.01 AND pattern.slongitude+0.01)
+		AND (delivery.receiving_latitude BETWEEN pattern.rlatitude-0.01 AND pattern.rlatitude+0.01) 
+		AND (delivery.receiving_longitude BETWEEN pattern.rlongitude-0.01 AND pattern.rlongitude+0.01)
+		AND delivery.grade <= #{grade}
+	]]>
+	</select>
+	
+	<select id="getDeliveryListForDelivery" parameterType="DeliverySearchOption" resultMap="DeliveryResultSet">
+		<![CDATA[
+			SELECT * FROM delivery where sending_loc LIKE '%'||#{sendingLoc}||'%'
+			AND receiving_loc LIKE '%'||#{receivingLoc}||'%' AND deliverer_id is null
+		]]>
+	</select>
+	
+	<select id="getDeliveryListForWaitDeliverer" parameterType="PartyVO" resultMap="DeliveryResultSet">
+		<![CDATA[
+			SELECT * FROM (SELECT * FROM delivery WHERE deliverer_id is null) as d JOIN
+			(SELECT * FROM deliverer_application WHERE deliverer_id=#{id}) as da
+			ON d.id=da.delivery_id;
+		]]>
+	</select>
+	
+	<select id="getDeliveryList" parameterType="DeliverySearchOption" resultMap="DeliveryResultSet">
+		<![CDATA[
+			SELECT * FROM delivery where sending_loc LIKE '%'||#{sendingLoc}||'%'
+			AND receiving_loc LIKE '%'||#{receivingLoc}||'%' 
+		]]>
+		 <if test="senderId != 0">
+ 		<![CDATA[
+ 			AND sender_id = #{senderId} 
+ 		]]> 
+ 		</if>
+ 		<if test="delivererId != 0">
+ 		<![CDATA[
+ 			AND deliverer_id = #{delivererId} 
+ 		]]> 
+ 		</if>
+ 		<if test="receiverId != 0">
+ 		<![CDATA[
+ 			AND receiver_id = #{receiverId} 
+ 		]]> 
+ 		</if>
+	</select>
+	
+	<select id="getDelivery" parameterType="DeliveryVO" resultMap="DeliveryResultSet">
+		<![CDATA[
+			SELECT * FROM delivery WHERE id=#{id}
+ 		]]> 
+	</select>
+	
+	<select id="getDeliveryWithRS" parameterType="DeliveryVO" resultMap="DeliveryWithRSResultSet">
+		<![CDATA[
+			SELECT *,
+			d.id as d_id,
+			s.id as s_id,
+			r.id as r_id,
+			d.sending_dt as d_sending_dt,
+			d.receiving_dt as d_receiving_dt,
+			s.sending_dt as s_sending_dt,
+			r.receiving_dt as r_receiving_dt,
+			s.deliverer_confirm as s_deliverer_confirm,
+			r.deliverer_confirm as r_deliverer_confirm,
+			s.security_info as s_security_info,
+			r.security_info as r_security_info
+			FROM ( SELECT * FROM delivery where id = #{id}) as d 
+			left outer join sending as s on (d.id=s.id) 
+			left outer join receiving as r on (s.id=r.id);
+ 		]]> 
+	</select>
+	
+	<select id="getDeliveryBeforeSelectDelivererBySender" parameterType="DeliveryVO" resultMap="DeliveryBeforeSelectDelivererResultSet">
+		<![CDATA[
+			SELECT *, d.id as d_id, p.id as p_id, p.grade as p_grade, d.grade as d_grade FROM delivery AS d LEFT OUTER JOIN deliverer_application AS da 
+			ON d.id=da.delivery_id LEFT OUTER JOIN party AS p ON da.deliverer_id=p.id 
+			WHERE d.id=#{id};
+ 		]]> 
+	</select>
+	
+	<select id="getDeliveryBeforeSelectDelivererByDeliverer" parameterType="DeliveryVO" resultMap="DeliveryBeforeSelectDelivererResultSet">
+		<![CDATA[
+			SELECT *, d.id as d_id, p.id as p_id, p.grade as p_grade, d.grade as d_grade FROM delivery AS d LEFT OUTER JOIN deliverer_application AS da 
+			ON d.id=da.delivery_id AND da.deliverer_id=#{delivererId} LEFT OUTER JOIN party AS p ON da.deliverer_id=p.id 
+			WHERE d.id=#{id};
+ 		]]> 
+	</select>
+	
+	<select id="getSending" parameterType="DeliveryVO" resultMap="SendingResultSet">
+		<![CDATA[
+ 			SELECT
+ 			*
+ 			FROM sending
+ 			WHERE id = #{id}
+ 		]]> 
+	</select>
+	
+	<select id="getReceiving" parameterType="SendingVO" resultMap="ReceivingResultSet">
+		<![CDATA[
+ 			SELECT
+ 			*
+ 			FROM receiving
+ 			WHERE id = #{id}
+ 		]]> 
+	</select>
+	
+	<resultMap type="PartyVO" id="PartyResultSet">
+		<id property="id" column="p_id" />
+		<result property="name" column="name" />
+		<result property="loginId" column="login_id" />
+		<result property="grade" column="p_grade" />
+		<result property="score" column="score" />
+		<result property="securityDeposite" column="security_deposite" />
+	</resultMap>
+	
+	<resultMap type="SendingVO" id="SendingResultSet">
+		<id property="id" column="s_id" />
+		<result property="sendingDt" column="s_sending_dt"/>
+		<result property="delivererConfirm" column="s_deliverer_confirm"/>
+		<result property="senderConfirm" column="sender_confirm" />
+		<result property="securityInfo" column="s_security_info" />
+	</resultMap>
+	
+	<resultMap type="ReceivingVO" id="ReceivingResultSet">
+		<id property="id" column="r_id" />
+		<result property="receivingDt" column="r_receiving_dt"/>
+		<result property="delivererConfirm" column="r_deliverer_confirm" />
+		<result property="receiverConfirm" column="receiver_confirm"/>
+		<result property="securityInfo" column="r_security_info" />
+	</resultMap>
+	
+	<resultMap type="DeliveryVO" id="DeliveryResultSet">
+		<id property="id" column="id" />
+		<result property="senderId" column="sender_id" />
+		<result property="receiverId" column="receiver_id" />
+		<result property="delivererId" column="deliverer_id" />
+		<result property="sendingLoc" column="sending_loc" />
+		<result property="sendingLatitude" column="sending_latitude" />
+		<result property="sendingLongitude" column="sending_longitude" />
+		<result property="receivingLoc" column="receiving_loc" />
+		<result property="receivingLatitude" column="receiving_latitude" />
+		<result property="receivingLongitude" column="receiving_longitude" />
+		<result property="sendingDt" column="sending_dt" />
+		<result property="receivingDt" column="receiving_dt" />
+		<result property="grade" column="grade" />
+		<result property="sendingType" column="sending_type" />
+		<result property="receivingType" column="receiving_type" />		
+		<result property="chargeAmt" column="charge_amt" />
+		<result property="itemType" column="item_type" />
+		<result property="itemWidth" column="item_width" />
+		<result property="itemLength" column="item_length" />
+		<result property="itemHeight" column="item_height" />
+		<result property="itemWeight" column="item_weight" />
+		<result property="itemValue" column="item_value" />
+	</resultMap>
+	
+	<resultMap type="DeliveryVO" id="DeliveryWithRSResultSet">
+		<id property="id" column="d_id" />
+		<result property="senderId" column="sender_id" />
+		<result property="receiverId" column="receiver_id" />
+		<result property="delivererId" column="deliverer_id" />
+		<result property="sendingLoc" column="sending_loc" />
+		<result property="sendingLatitude" column="sending_latitude" />
+		<result property="sendingLongitude" column="sending_longitude" />
+		<result property="receivingLoc" column="receiving_loc" />
+		<result property="receivingLatitude" column="receiving_latitude" />
+		<result property="receivingLongitude" column="receiving_longitude" />
+		<result property="sendingDt" column="d_sending_dt" />
+		<result property="receivingDt" column="d_receiving_dt" />
+		<result property="grade" column="grade" />
+		<result property="sendingType" column="sending_type" />
+		<result property="receivingType" column="receiving_type" />		
+		<result property="chargeAmt" column="charge_amt" />
+		<result property="itemType" column="item_type" />
+		<result property="itemWidth" column="item_width" />
+		<result property="itemLength" column="item_length" />
+		<result property="itemHeight" column="item_height" />
+		<result property="itemWeight" column="item_weight" />
+		<result property="itemValue" column="item_value" />
+		<association property="sendingVO" column="s_id" javaType="SendingVO" resultMap="SendingResultSet"/>
+		<association property="receivingVO" column="r_id" javaType="ReceivingVO" resultMap="ReceivingResultSet"/>
+	</resultMap>
+	
+		<resultMap type="DeliveryVO" id="DeliveryBeforeSelectDelivererResultSet">
+		<id property="id" column="d_id" />
+		<result property="senderId" column="sender_id" />
+		<result property="receiverId" column="receiver_id" />
+		<result property="delivererId" column="deliverer_id" />
+		<result property="sendingLoc" column="sending_loc" />
+		<result property="sendingLatitude" column="sending_latitude" />
+		<result property="sendingLongitude" column="sending_longitude" />
+		<result property="receivingLoc" column="receiving_loc" />
+		<result property="receivingLatitude" column="receiving_latitude" />
+		<result property="receivingLongitude" column="receiving_longitude" />
+		<result property="sendingDt" column="sending_dt" />
+		<result property="receivingDt" column="receiving_dt" />
+		<result property="grade" column="d_grade" />
+		<result property="sendingType" column="sending_type" />
+		<result property="receivingType" column="receiving_type" />		
+		<result property="chargeAmt" column="charge_amt" />
+		<result property="itemType" column="item_type" />
+		<result property="itemWidth" column="item_width" />
+		<result property="itemLength" column="item_length" />
+		<result property="itemHeight" column="item_height" />
+		<result property="itemWeight" column="item_weight" />
+		<result property="itemValue" column="item_value" />
+		<collection property="delivererList" column="p_id" ofType="PartyVO" resultMap="PartyResultSet"/>
+	</resultMap>
+	
+	<resultMap type="DeliveryImgVO" id="DeliveryImgResultSet">
+		<result property="deliveryId" column="delivery_id" />
+		<result property="imgName" column="img_name"/>
+	</resultMap>
+
+</mapper>

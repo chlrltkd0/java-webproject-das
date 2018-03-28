@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardDAO">
+
+	<select id="getBoard" parameterType="BoardVO" resultMap="BoardResultSet">
+	<![CDATA[
+		SELECT * FROM board WHERE idx = #{idx}
+	]]>
+	</select>
+
+	<select id="getBoardList" parameterType="BoardListVO" resultMap="BoardResultSet">
+	<![CDATA[
+		SELECT idx, category_idx, title, writer, reg_date FROM board WHERE 
+		category_idx = #{categoryIdx} AND title LIKE '%'||#{keyword}||'%'
+		ORDER BY idx DESC LIMIT 10 OFFSET #{page}
+	]]>
+	</select>
+	
+	<select id="getBoardCount" parameterType="BoardListVO" resultType="int">
+	<![CDATA[
+		SELECT count(*) FROM board WHERE 
+		category_idx = #{categoryIdx} AND title LIKE '%'||#{keyword}||'%'
+	]]>
+	</select>
+
+	<insert id="insertBoard" parameterType="BoardVO">
+	<![CDATA[
+		INSERT INTO board (idx, category_idx, title, content, writer, writer_idx)
+		VALUES(nextVal('seq4Board'), #{categoryIdx}, #{title}, #{content}, #{writer}, #{writerIdx})
+	]]>
+	</insert>
+	
+	<delete id="deleteBoard" parameterType="BoardVO">
+	<![CDATA[
+		DELETE FROM board WHERE idx = #{idx}
+	]]>
+	</delete>
+	
+	<resultMap type="BoardVO" id="BoardResultSet">
+		<result property="regDate" column="reg_date" />
+		<result property="modifyDate" column="modify_date" />
+	</resultMap>
+
+</mapper>

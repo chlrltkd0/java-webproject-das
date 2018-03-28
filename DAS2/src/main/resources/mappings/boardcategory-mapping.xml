@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardCategoryDAO">
+
+	<select id="getBoardCategoryList" parameterType="BoardCategoryVO" resultMap="BoardCategoryResultSet">
+	<![CDATA[
+		SELECT * FROM boardcategory ORDER BY seq
+	]]>
+	</select>
+	
+		<select id="getBoardCategory" parameterType="BoardCategoryVO" resultMap="BoardCategoryResultSet">
+	<![CDATA[
+		SELECT * FROM boardcategory WHERE idx=#{idx}
+	]]>
+	</select>
+
+	<insert id="insertBoardCategory" parameterType="BoardCategoryVO">
+	<![CDATA[
+		INSERT INTO boardcategory (idx, name, describe, seq, read_authority, write_authority, comment_authority)
+		VALUES(nextVal('seq4BoardCategory'), #{name}, #{describe}, #{seq}, #{readAuthority}, #{writeAuthority}, #{commentAuthority})
+	]]>
+	</insert>
+	
+	<update id="updateBoardCategory" parameterType="BoardCategoryVO">
+		<![CDATA[
+			UPDATE boardcategory SET 
+			name=#{name}, describe=#{describe}, seq=#{seq}, 
+			read_authority=#{readAuthority}, write_authority=#{writeAuthority}, comment_authority=#{commentAuthority}
+			WHERE idx = #{idx}
+		]]>
+	</update>
+
+	<delete id="deleteBoardCategory" parameterType="BoardCategoryVO">
+	<![CDATA[
+		DELETE FROM boardcategory WHERE idx = #{idx}
+	]]>
+	</delete>
+	
+	
+	
+	<resultMap type="BoardCategoryVO" id="BoardCategoryResultSet">
+		<result property="parentIdx" column="parentIdx" />
+		<result property="readAuthority" column="read_authority" />
+		<result property="writeAuthority" column="write_authority" />
+		<result property="commentAuthority" column="comment_authority" />
+	</resultMap>
+
+</mapper>

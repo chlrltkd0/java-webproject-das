@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PatternNodeDAO">
+
+<!-- 	새로운 패턴이 추가될때 -->
+	<insert id="insertPatternNode" parameterType="PatternNode">
+		<![CDATA[
+			INSERT INTO pattern_node(id, party_id, latitude, longitude, address, locWeight)
+			VALUES (#{id}, #{partyId}, #{location.latitude}, #{location.longitude}, #{location.address}, #{locWeight})
+ 		]]> 
+	</insert>
+
+<!-- 	한사람의 그냥 모든 패턴리스트 가져옴, 언제쓰냐면 패턴분석할때 사용함 -->
+	<select id="getPatternNodeList" parameterType="int" resultMap="PatternNodeResultSet">
+		<![CDATA[
+			SELECT * from pattern_node WHERE party_id=#{id}
+ 		]]> 
+	</select>
+	
+	<update id="updatePatternNode" parameterType="PatternNode">
+		<![CDATA[
+			UPDATE pattern_node 
+			SET latitude = #{location.latitude}, longitude = #{location.longitude}, address = #{location.address}, locWeight = #{locWeight}
+			WHERE id = #{id}
+ 		]]> 
+	</update>
+	
+	<select id="genId" resultType="int">
+		<![CDATA[
+			select nextval('seq4Pattern')
+		]]>
+	</select>
+		
+	<resultMap type="PatternNode" id="PatternNodeResultSet">
+		<id property="id" column="id" />
+		<result property="partyId" column="party_id" />
+		<result property="locWeight" column="locweight" />
+		<association property="location" column="latitude" javaType="LocationVO">
+			<result property="address" column="address" />
+			<result property="latitude" column="latitude"/>
+			<result property="longitude" column="longitude"/>
+		</association>
+	</resultMap>
+	
+</mapper>

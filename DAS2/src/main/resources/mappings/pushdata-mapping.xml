@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PushDAO">
+
+	<insert id="insertPushData" parameterType="PushData">
+		<![CDATA[
+ 			INSERT INTO push_data values (nextVal('seq4PushData'), #{partyId}, #{endPoint}, #{p256dh}, #{auth})
+ 		]]> 
+	</insert>
+	
+	<select id="CheckPushData" parameterType="PushData" resultType="int">
+		<![CDATA[
+ 			SELECT count(*) FROM push_data WHERE endpoint = #{endPoint};
+ 		]]> 
+	</select>
+
+	<select id="getPushDataList" parameterType="PartyVO" resultMap="PushDataResultSet">
+		<![CDATA[
+ 			SELECT * FROM push_data WHERE party_id = #{id};
+ 		]]> 
+	</select>
+	
+	<resultMap type="PushData" id="PushDataResultSet">
+		<id property="partyId" column="party_id" />
+		<result property="endPoint" column="endpoint" />
+		<result property="p256dh" column="p256dh" />
+		<result property="auth" column="auth" />
+	</resultMap>
+
+</mapper>

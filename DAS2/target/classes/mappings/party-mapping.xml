@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PartyDAO">
+
+	<insert id="insertParty" parameterType="PartyVO">
+		<![CDATA[
+			INSERT INTO party (id, name, login_id, login_pwd, score, cash, security_deposit) 
+			VALUES (#{id}, #{name}, #{loginId}, #{loginPwd}, #{score}, 1000000, #{securityDeposit})
+		]]>
+	</insert>
+	
+	<delete id="deleteParty" parameterType="PartyVO">
+		<![CDATA[
+			DELETE FROM party WHERE
+			id = #{id}
+		]]>
+	</delete>
+	
+	<update id="updateParty" parameterType="PartyVO">
+		<![CDATA[
+			UPDATE party SET 
+			name=#{name}, login_pwd=#{loginPwd}, score=#{score}, 
+			cash=#{cash}, security_deposit=#{securityDeposit}, grade=#{grade}
+			WHERE id = #{id}
+		]]>
+	</update>
+	
+	<update id="updatePassword" parameterType="PartyVO">
+		<![CDATA[
+			UPDATE party
+			SET
+			login_pwd=#{logiPwd}
+			WHERE
+			id = #{id}
+		]]>
+	</update>
+	
+	<update id="plusCash" parameterType="PartyVO">
+		<![CDATA[
+			UPDATE party SET cash = cash + #{cash}
+			WHERE id = #{id}
+		]]>
+	</update>
+	
+	<update id="minusCash" parameterType="PartyVO">
+		<![CDATA[
+			UPDATE party SET cash = cash - #{cash}
+			WHERE id = #{id}
+		]]>
+	</update>
+	
+	<update id="plusSecurityDeposit" parameterType="PartyVO">
+		<![CDATA[
+			UPDATE party SET security_deposit = security_deposit + #{securityDeposit}
+			WHERE id = #{id}
+		]]>
+	</update>
+	
+	<update id="minusSecurityDeposit" parameterType="PartyVO">
+		<![CDATA[
+			UPDATE party SET security_deposit = security_deposit - #{securityDeposit}
+			WHERE id = #{id}
+		]]>
+	</update>
+	
+	<select id="checkLoginId" parameterType="PartyVO" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM party WHERE login_id=#{loginId} 
+		]]>
+	</select>
+	
+	<select id="getParty" parameterType="PartyVO" resultMap="PartyResultSet">
+		<![CDATA[
+ 			SELECT
+ 			*
+ 			FROM party
+ 			WHERE login_id = #{loginId} and login_pwd = #{loginPwd}
+ 		]]> 
+	</select>
+	
+	<select id="getPartyById" parameterType="PartyVO" resultMap="PartyResultSet">
+		<![CDATA[
+ 			SELECT * FROM party WHERE id = #{id}
+ 		]]> 
+	</select>
+	
+	<select id="genId" resultType="int">
+		<![CDATA[
+ 			SELECT nextVal('seq4party_id')
+ 		]]> 
+	</select>
+	
+	<select id="getAllPartyList" resultMap="PartyResultSet">
+		<![CDATA[
+ 			SELECT * FROM party
+ 		]]> 
+	</select>
+	
+	<select id="getPartyInfoList" parameterType="hashmap" resultMap="PartyResultSet">
+		<![CDATA[
+ 			SELECT * FROM party ORDER BY id desc LIMIT 10 OFFSET #{page}
+ 		]]> 
+	</select>
+	
+		<select id="getPartyCount"  resultType="int">
+		<![CDATA[
+ 			SELECT count(*) FROM party
+ 		]]> 
+	</select>
+	
+	<resultMap type="PartyVO" id="PartyResultSet">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="loginId" column="login_id" />
+		<result property="loginPwd" column="login_pwd" />
+		<result property="grade" column="grade" />
+		<result property="score" column="score" />
+		<result property="securityDeposite" column="security_deposite" />
+	</resultMap>
+
+</mapper>

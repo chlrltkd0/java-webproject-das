@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PartyLocationDAO">
+
+<!-- 	한개씩 curLocation을 추가하는건데 이걸 어따써먹는지 모르겠다. -->
+	<insert id="insertLocation" parameterType="PartyLocationVO">
+		<![CDATA[
+			INSERT INTO cur_location(party_id, latitude, longitude, detect_time)
+			VALUES (#{party.id}, #{location.latitude}, #{location.longitude}, #{detectTime})
+		]]>
+	</insert>
+	
+<!-- 	여러개의 위치정보를 한번에저장, 안드로이드에서 전송받는거 넣는부분 -->
+	<insert id="insertLocationList" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO cur_location(party_id, latitude, longitude, detect_time)
+			VALUES 
+		]]>
+		<foreach collection="list" item="item" index="index" separator=",">
+			<![CDATA[
+            	(#{item.partyId}, #{item.location.latitude}, #{item.location.longitude}, #{item.detectTime})
+            ]]>
+        </foreach>
+	</insert>
+	
+<!-- 	패턴분석할때 한번에 다가져오는것 -->
+	<select id="getPartyLocationList" parameterType="hashmap" resultMap="PartyLocationResultSet">
+		<![CDATA[
+ 			SELECT * FROM cur_location 
+			WHERE party_id=#{partyId} AND detect_time >= #{startDate} AND (detect_time < to_timestamp('${endDate}', 'YYYY-MM-DD') + interval '1 day')
+			ORDER BY detect_time
+ 		]]> 
+	</select>
+	
+	
+	<resultMap type="PartyLocationVO" id="PartyLocationResultSet">
+			<result property="detectTime" column="detect_time"/>
+			<association property="location" column="latitude" javaType="LocationVO" >
+				<result property="latitude" column="latitude"/>
+				<result property="longitude" column="longitude"/>
+			</association>
+	</resultMap>
+
+</mapper>

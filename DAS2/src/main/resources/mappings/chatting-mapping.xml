@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ChattingDAO">
+
+	<insert id="insertChattingVO" parameterType="ChattingVO">
+		<![CDATA[
+			INSERT INTO delivery_chat (id, delivery_id, party_id, message) 
+			VALUES (nextVal('seq4Chat'), #{deliveryId}, #{partyId}, #{message})
+		]]>
+	</insert>
+	
+	<select id="getChattingList" parameterType="ChattingVO" resultMap="ChattingResultSet">
+		<![CDATA[
+ 			SELECT * FROM delivery_chat
+ 			WHERE delivery_id = #{deliveryId} AND id > #{id}
+ 		]]> 
+	</select>
+	
+	<resultMap type="ChattingVO" id="ChattingResultSet">
+		<id property="id" column="id" />
+		<result property="deliveryId" column="delivery_id" />
+		<result property="partyId" column="party_id" />
+		<result property="message" column="message" />
+		<result property="regDate" column="reg_date" />
+	</resultMap>
+
+</mapper>
