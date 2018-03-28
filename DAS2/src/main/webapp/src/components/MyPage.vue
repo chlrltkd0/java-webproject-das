@@ -130,15 +130,17 @@
       <b-col md="3">
         <b-card>
           <b-list-group>
-            <b-list-group-item v-for="action in dayPathList" variant="light" class="flex-column align-items-start" href="#" v-on:click="">
-              <div class="d-flex justify-content-between">
-                <h4 v-if="action.toStaying==null"><span class="badge badge-danger">머뭄</span></h4>
-                <h4 v-if="action.toStaying!=null"><span class="badge badge-primary">이동</span></h4>
-                <h5><span>{{action.startTimeConvert}} ~ {{action.endTimeConvert}}</span></h5>
-                <h5><span>{{action.time}}</span></h5>
-              </div>
-              <h6 v-if="action.location!=null" >{{action.location.address}}</h6>
-            </b-list-group-item>
+            <div id="pathList">
+              <b-list-group-item v-for="action in dayPathList" variant="light" class="flex-column align-items-start" href="#" v-on:click="">
+                <div class="d-flex justify-content-between">
+                  <h4 v-if="action.toStaying==null"><span class="badge badge-danger">머뭄</span></h4>
+                  <h4 v-if="action.toStaying!=null"><span class="badge badge-primary">이동</span></h4>
+                  <h5><span>{{action.startTimeConvert}} ~ {{action.endTimeConvert}}</span></h5>
+                  <h5><span>{{action.time}}</span></h5>
+                </div>
+                <h6 v-if="action.location!=null" >{{action.location.address}}</h6>
+              </b-list-group-item>
+            </div>
             <b-list-group-item class="flex-column align-items-start" v-on:click="">
               <b-row>
                 <b-col md="8">
@@ -177,7 +179,7 @@
                 <b-list-group-item variant="primary" class="flex-column align-items-start" href="#" v-on:click="">
                   <div class="d-flex justify-content-between">
                     <b-col md="4"><h4>출발지</h4></b-col>
-                    <b-col md="1"><h4>~</h4></b-col>
+                    <b-col md="1"><h4>-></h4></b-col>
                     <b-col md="4"><h4>도착지</h4></b-col>
                     <b-col md="1"><h4>횟수</h4></b-col>
                     <b-col md="2"><h4><span class="badge badge-primary">반복여부</span></h4></b-col>
@@ -185,13 +187,13 @@
                 </b-list-group-item>
                 <b-list-group-item v-for="pattern in patternList" variant="light" class="flex-column align-items-start" href="#" v-on:click="">
                   <div class="d-flex justify-content-between">
-                    <b-col md="4"><h4>{{pattern.fromLocation.address}}</h4></b-col>
-                    <b-col md="1"><h4>~</h4></b-col>
-                    <b-col md="4"><h4>{{pattern.fromLocation.address}}</h4></b-col>
-                    <b-col md="1"><h4>{{pattern.repeatCount}}</h4></b-col>
+                    <b-col md="4"><h5>{{pattern.fromLocation.address}}</h5></b-col>
+                    <b-col md="1"><h5>-></h5></b-col>
+                    <b-col md="4"><h5>{{pattern.toLocation.address}}</h5></b-col>
+                    <b-col md="1"><h5>{{pattern.repeatCount}}</h5></b-col>
                     <b-col md="2">
                       <h4>
-                        <span v-for="repeat in pattern.repeatList" class="badge badge-danger">{{repeat}}</span>
+                        <span v-for="repeat in pattern.repeatList" class="badge badge-danger">{{repeat}} </span>
                       </h4>
                     </b-col>
                   </div>
@@ -306,5 +308,11 @@ export default {
 </script>
 
 <style lang="css">
-
+#pathList {
+	/* position: absolute; */
+	right: 0;
+	width: 100%;
+	height: 335px;
+  overflow-y: auto;
+}
 </style>
