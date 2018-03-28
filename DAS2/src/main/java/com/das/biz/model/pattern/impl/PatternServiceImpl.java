@@ -38,7 +38,7 @@ public class PatternServiceImpl implements PatternService {
 	
 	@Override
 	public List<Pattern> getPatternList(PartyVO target) {
-		return null;
+		return pDAO.getPatternList(target);
 	}
 	
 	@Override

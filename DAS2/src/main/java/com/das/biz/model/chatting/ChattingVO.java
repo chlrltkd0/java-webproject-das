@@ -7,7 +7,7 @@ public class ChattingVO {
 	private int deliveryId;
 	private int partyId;
 	private String message;
-	private Timestamp regDate;
+	private Timestamp regDt;
 	
 	public int getId() {
 		return id;
@@ -33,19 +33,19 @@ public class ChattingVO {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public Timestamp getRegDate() {
-		return regDate;
+	public Timestamp getRegDt() {
+		return regDt;
 	}
-	public void setRegDate(Timestamp regDate) {
-		this.regDate = regDate;
+	public void setRegDt(Timestamp regDt) {
+		this.regDt = regDt;
 	}
-	public ChattingVO(int id, int deliveryId, int partyId, String message, Timestamp regDate) {
+	public ChattingVO(int id, int deliveryId, int partyId, String message, Timestamp regDt) {
 		super();
 		this.id = id;
 		this.deliveryId = deliveryId;
 		this.partyId = partyId;
 		this.message = message;
-		this.regDate = regDate;
+		this.regDt = regDt;
 	}
 	public ChattingVO() {
 		super();
@@ -53,6 +53,6 @@ public class ChattingVO {
 	@Override
 	public String toString() {
 		return "ChattingVO [id=" + id + ", deliveryId=" + deliveryId + ", partyId=" + partyId + ", message=" + message
-				+ ", regDate=" + regDate + "]";
+				+ ", regDt=" + regDt + "]";
 	}
 }

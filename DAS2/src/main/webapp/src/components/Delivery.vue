@@ -77,12 +77,18 @@
           </div>
 
           <div v-if="this.$store.state.delivery.delivererId != 0">
-
             <b-btn v-b-toggle="'collapse1'" class="m-1">상대위치 지도확인</b-btn>
             <b-btn v-b-toggle="'collapse2'" class="m-1">채팅하기</b-btn>
-            <b-collapse id="collapse1">
+            <b-collapse id="collapse1" v-on:show="startGetCoords" v-on:hide="stopGetCoords">
               <b-card>
-                구글지도 박기
+                <gmap-map class="loading-overlay" v-if="this.$store.state.coords.lat != null" :center="{lat:this.$store.state.coords.lat, lng:this.$store.state.coords.lng}" :zoom="12" style="width:100%;  height: 400px;">
+                  <gmap-marker v-if="this.senderLocation != null" :position="{lat:this.senderLocation.latitude, lng:this.senderLocation.longitude}"
+                    :clickable="true" :label="{color : 'black', fontFamily: 'Nanum Gothic', fontWeight:'bold', text: '발송자'}"></gmap-marker>
+                  <gmap-marker v-if="this.delivererLocation != null" :position="{lat:this.delivererLocation.latitude, lng:this.delivererLocation.longitude}"
+                    :clickable="true" :label="{color : 'black', fontFamily: 'Nanum Gothic', fontWeight:'bold', text: '배송자'}"></gmap-marker>
+                  <gmap-marker v-if="this.receiverLocation != null" :position="{lat:this.receiverLocation.latitude, lng:this.receiverLocation.longitude}"
+                    :clickable="true" :label="{color : 'black', fontFamily: 'Nanum Gothic', fontWeight:'bold', text: '수령자'}"></gmap-marker>
+                </gmap-map>
               </b-card>
             </b-collapse>
             <b-collapse id="collapse2" v-on:show="startChat" v-on:hide="stopChat">
@@ -90,10 +96,9 @@
                 <b-list-group>
                   <div id="chatarea">
                     <b-list-group-item v-for="(chat, index) in this.chatList" :key="index" class="d-flex justify-content-between align-items-center">
-                      <b-col md="2" v-if="chat.partyId==this.$store.state.party.id">나</b-col>
-                      <b-col md="2" v-if="chat.partyId!=this.$store.state.party.id">상대방</b-col>
-                      <b-col md="6">{{chat.message}}</b-col>
-                      <b-col md="4">{{new Date(chat.regDt)}}</b-col>
+                      <b-col md="3">{{chat.cname}}</b-col>
+                      <b-col md="8">{{chat.message}}</b-col>
+                      <b-col md="3">{{chat.ctime}}</b-col>
                     </b-list-group-item>
                   </div>
                   <div class="input-group mb-3">
@@ -156,6 +161,7 @@
   						<b-button type="button" v-if="this.$store.state.delivery.receivingVO.receiverConfirm == false && this.$store.state.party.id == this.$store.state.delivery.receiverId"
                 v-on:click="confirmReceivingForReceiver" variant="primary">접수확인(수령자)</b-button>
   					</div>
+            <div v-if="this.$store.state.delivery.receivingVO.receiverConfirm"><h1>배송 종료</h1></div>
           </div>
 				</div>
 			</div>
@@ -171,18 +177,48 @@ export default {
       chatmessage : '',
       chatList : [],
       testnumber : 1,
-      interval : null
+      chatInterval : null,
+      coordsInterval : null,
+      senderLocation : null,
+      delivererLocation : null,
+      receiverLocation : null
     }
   },
   beforeDestroy : function(){
-    clearInterval(this.interval);
+    clearInterval(this.chatInterval);
+    clearInterval(this.coordsInterval);
   },
   methods : {
+    timeConvert : function(time){
+      var date = new Date(time);
+      return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    },
+    startGetCoords : function(){
+      this.coordsInterval = setInterval(this.requestCoords, 60000);
+    },
+    stopGetCoords : function(){
+      clearInterval(this.coordsInterval);
+    },
+    requestCoords : function(){
+      this.$http({
+        method : 'post',
+        url : 'getDeliveryCoords.do',
+        params : {
+          id : this.$store.state.delivery.id
+        }
+      }).then((response) => {
+        this.senderLocation = response.data.sender;
+        this.delivererLocation = response.data.deliverer;
+        this.receiverLocation = response.data.receiver;
+      }).catch((error) => {
+        console.log(error);
+      })
+    },
     startChat : function(){
-      this.interval = setInterval(this.requestChat, 2000);
+      this.chatInterval = setInterval(this.requestChat, 2000);
     },
     stopChat : function(){
-      clearInterval(this.interval);
+      clearInterval(this.chatInterval);
     },
     doChat : function(){
       this.$http({
@@ -194,11 +230,11 @@ export default {
         }
       }).then((response) => {
         if(response.data==false){
-          alert('에러발생 채팅전송 실패');
+          console.log("에러발생 채팅전송 실패");
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러발생 채팅전송 실패');
+        console.log("에러발생 채팅전송 실패");
       })
       this.chatmessage = '';
     },
@@ -213,11 +249,19 @@ export default {
       }).then((response) => {
         var arr = response.data;
         for(var index in arr){
+          if(arr[index].partyId==this.$store.state.delivery.senderId){
+            arr[index].cname = '발송자';
+          } else if(arr[index].partyId==this.$store.state.delivery.delivererId){
+            arr[index].cname = '배송자';
+          } else if(arr[index].partyId==this.$store.state.delivery.receiverId){
+            arr[index].cname = '수령자';
+          }
+          arr[index].ctime = this.timeConvert(arr[index].regDt);
           this.chatList.push(arr[index]);
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러발생 채팅받기 실패');
+        console.log('에러발생 채팅받기 실패');
       })
     },
     selectDeliverer : function(pid){

@@ -2,12 +2,12 @@ package com.das.biz.controller;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.das.biz.model.delivery.DeliverySearchOption;
 import com.das.biz.model.delivery.DeliveryService;
 import com.das.biz.model.delivery.DeliveryVO;
+import com.das.biz.model.location.LocationVO;
 import com.das.biz.model.party.PartyVO;
+import com.das.biz.model.partylocation.PartyLocationService;
 
 @Controller
 public class DeliveryController {
@@ -107,5 +109,12 @@ public class DeliveryController {
 	public boolean confirmReceivingForReceiver(DeliveryVO dvo, HttpSession session) {
 		PartyVO pvo = (PartyVO)session.getAttribute("party");
 		return dService.confirmReceivingForReceiver(dvo, pvo);
+	}
+	
+	@RequestMapping("getDeliveryCoords.do")
+	@ResponseBody
+	public Map<String, LocationVO> getDeliveryCoords(DeliveryVO dvo, HttpSession session) {
+		PartyVO pvo = (PartyVO)session.getAttribute("party");
+		return dService.getDeliveryCoords(dvo, pvo);
 	}
 }

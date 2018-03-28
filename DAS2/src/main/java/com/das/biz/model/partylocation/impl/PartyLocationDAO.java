@@ -1,4 +1,4 @@
-package com.das.biz.model.path.impl;
+package com.das.biz.model.partylocation.impl;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.das.biz.model.party.PartyVO;
-import com.das.biz.model.path.PartyLocationVO;
+import com.das.biz.model.partylocation.PartyLocationVO;
 
 @Repository
 public class PartyLocationDAO {
@@ -42,5 +42,11 @@ public class PartyLocationDAO {
 		paramMap.put("startDate", sd);
 		paramMap.put("endDate", ed);
 		return mybatis.selectList("PartyLocationDAO.getPartyLocationList", paramMap);
+	}
+
+	public PartyLocationVO getLastPartyLocation(PartyVO pvo) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("partyId", pvo.getId());
+		return mybatis.selectOne("PartyLocationDAO.getLastPartyLocation", paramMap);
 	}
 }

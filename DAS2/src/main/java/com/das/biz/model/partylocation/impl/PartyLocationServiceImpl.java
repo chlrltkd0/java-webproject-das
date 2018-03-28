@@ -1,4 +1,4 @@
-package com.das.biz.model.path.impl;
+package com.das.biz.model.partylocation.impl;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -12,9 +12,9 @@ import com.das.biz.model.location.LocationVO;
 import com.das.biz.model.party.PartyAndLocationCMD;
 import com.das.biz.model.party.PartyService;
 import com.das.biz.model.party.PartyVO;
-import com.das.biz.model.path.PartyLocationCMD;
-import com.das.biz.model.path.PartyLocationService;
-import com.das.biz.model.path.PartyLocationVO;
+import com.das.biz.model.partylocation.PartyLocationCMD;
+import com.das.biz.model.partylocation.PartyLocationService;
+import com.das.biz.model.partylocation.PartyLocationVO;
 
 @Service
 public class PartyLocationServiceImpl implements PartyLocationService {
@@ -27,6 +27,11 @@ public class PartyLocationServiceImpl implements PartyLocationService {
 	@Override
 	public List<PartyLocationVO> getPartyLocationList(PartyVO pvo, Date sd, Date ed){
 		return plDAO.getPartyLocationList(pvo, sd, ed);
+	}
+	
+	@Override
+	public PartyLocationVO getLastPartyLocation(PartyVO pvo) {
+		return plDAO.getLastPartyLocation(pvo);
 	}
 
 	@Override

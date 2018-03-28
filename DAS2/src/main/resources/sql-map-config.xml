@@ -18,7 +18,7 @@
 		<typeAlias alias="ReceivingVO" type="com.das.biz.model.delivery.ReceivingVO"/>
 		<typeAlias alias="LocationVO" type="com.das.biz.model.location.LocationVO"></typeAlias>
 		<typeAlias alias="SearchConditionVO" type="com.das.biz.model.delivery.SearchConditionVO"></typeAlias>
-		<typeAlias alias="PartyLocationVO" type="com.das.biz.model.path.PartyLocationVO"></typeAlias>
+		<typeAlias alias="PartyLocationVO" type="com.das.biz.model.partylocation.PartyLocationVO"></typeAlias>
 		<typeAlias alias="DeliverySearchOption" type="com.das.biz.model.delivery.DeliverySearchOption"></typeAlias>
 		<typeAlias alias="ChattingVO" type="com.das.biz.model.chatting.ChattingVO"></typeAlias>
 		<typeAlias alias="StartEndDateVO" type="com.das.biz.model.chart.StartEndDateVO"></typeAlias>

@@ -14,8 +14,8 @@ import com.das.biz.model.action.Staying;
 import com.das.biz.model.geo.GeoService;
 import com.das.biz.model.location.LocationVO;
 import com.das.biz.model.party.PartyVO;
-import com.das.biz.model.path.PartyLocationService;
-import com.das.biz.model.path.PartyLocationVO;
+import com.das.biz.model.partylocation.PartyLocationService;
+import com.das.biz.model.partylocation.PartyLocationVO;
 
 @Component
 public class DayAnalyzer {

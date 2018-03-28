@@ -23,7 +23,7 @@
 		<result property="deliveryId" column="delivery_id" />
 		<result property="partyId" column="party_id" />
 		<result property="message" column="message" />
-		<result property="regDate" column="reg_date" />
+		<result property="regDt" column="reg_dt" />
 	</resultMap>
 
 </mapper>

@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.das.biz.model.action.Moving;
 import com.das.biz.model.action.Staying;
-import com.das.biz.model.path.PartyLocationVO;
+import com.das.biz.model.partylocation.PartyLocationVO;
 import com.das.biz.model.pattern.Pattern;
 
 public class PartyVO {

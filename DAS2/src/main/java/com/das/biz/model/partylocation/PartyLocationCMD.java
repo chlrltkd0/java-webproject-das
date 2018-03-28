@@ -1,4 +1,4 @@
-package com.das.biz.model.path;
+package com.das.biz.model.partylocation;
 
 public class PartyLocationCMD {
 	private float latitude;

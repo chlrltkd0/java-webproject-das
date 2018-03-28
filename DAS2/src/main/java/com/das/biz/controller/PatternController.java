@@ -16,7 +16,7 @@ import com.das.biz.model.action.ActionService;
 import com.das.biz.model.party.PartyAndLocationCMD;
 import com.das.biz.model.party.PartyService;
 import com.das.biz.model.party.PartyVO;
-import com.das.biz.model.path.PartyLocationService;
+import com.das.biz.model.partylocation.PartyLocationService;
 import com.das.biz.model.pattern.Pattern;
 import com.das.biz.model.pattern.PatternService;
 
@@ -47,9 +47,9 @@ public class PatternController {
 	
 	@RequestMapping("getPatternList.do")
 	@ResponseBody
-	public List<Pattern> getPatternList(@RequestParam(value="range")int range, PartyVO target, HttpSession session){
+	public List<Pattern> getPatternList(HttpSession session){
 		PartyVO pvo = (PartyVO)session.getAttribute("party");
-		return pService.getRangePatternList(pvo, range);
+		return pService.getPatternList(pvo);
 	}
 
 	@RequestMapping("dayAnalysis.do")

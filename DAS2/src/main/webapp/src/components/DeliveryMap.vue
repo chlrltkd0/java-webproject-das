@@ -15,16 +15,16 @@
           :clickable="true" :label="{color : 'black', fontFamily: 'Nanum Gothic', fontWeight:'bold', text: '도착'}" v-on:click="drawDeliveryPath(delivery)"></gmap-marker>
 
           <gmap-polyline v-for="pattern in this.$store.state.patternlist" :options="{strokeColor:'green', geodesic:true}" :path="[
-            {lat: pattern.fromNode.location.latitude, lng: pattern.fromNode.location.longitude},
-            {lat: pattern.toNode.location.latitude, lng: pattern.toNode.location.longitude}]">
+            {lat: pattern.fromLocation.latitude, lng: pattern.fromLocation.longitude},
+            {lat: pattern.toLocation.latitude, lng: pattern.toLocation.longitude}]">
           </gmap-polyline>
 
           <gmap-polyline  v-if="this.delivery != null" v-bind:options="{strokeColor : 'red'}"
            :path="[{lat: this.delivery.sendingLatitude, lng: this.delivery.sendingLongitude}, {lat: this.delivery.receivingLatitude, lng: this.delivery.receivingLongitude}]">
           </gmap-polyline>
 
-          <gmap-circle v-for="pattern in this.$store.state.patternlist" :options="{fillOpacity:0.1}" :center="{lat: pattern.fromNode.location.latitude, lng: pattern.fromNode.location.longitude}" :radius="radius"></gmap-circle>
-          <gmap-circle v-for="pattern in this.$store.state.patternlist" :options="{fillOpacity:0.1}" :center="{lat: pattern.toNode.location.latitude, lng: pattern.toNode.location.longitude}" :radius="radius"></gmap-circle>
+          <gmap-circle v-for="pattern in this.$store.state.patternlist" :options="{fillOpacity:0.1}" :center="{lat: pattern.fromLocation.latitude, lng: pattern.fromLocation.longitude}" :radius="radius"></gmap-circle>
+          <gmap-circle v-for="pattern in this.$store.state.patternlist" :options="{fillOpacity:0.1}" :center="{lat: pattern.toLocation.latitude, lng: pattern.toLocation.longitude}" :radius="radius"></gmap-circle>
       </gmap-map>
   	</div>
 

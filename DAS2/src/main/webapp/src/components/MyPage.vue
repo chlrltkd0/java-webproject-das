@@ -250,7 +250,7 @@ export default {
       if(this.selected!=null){
         this.$http({
           method : 'post',
-          url : 'getPatternList.do',
+          url : 'getRangePatternList.do',
           params : {
             id : this.$store.state.party.id,
             range : this.selected

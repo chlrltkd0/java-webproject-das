@@ -1,7 +1,9 @@
 package com.das.biz.model.delivery;
 
 import java.util.List;
+import java.util.Map;
 
+import com.das.biz.model.location.LocationVO;
 import com.das.biz.model.party.PartyVO;
 
 public interface DeliveryService {
@@ -22,4 +24,5 @@ public interface DeliveryService {
 	boolean confirmSendingForDeliverer(DeliveryVO dvo, PartyVO pvo);
 	boolean confirmReceivingForDeliverer(DeliveryVO dvo, PartyVO pvo);
 	boolean confirmReceivingForReceiver(DeliveryVO dvo, PartyVO pvo);
+	Map<String, LocationVO> getDeliveryCoords(DeliveryVO dvo, PartyVO pvo);
 }

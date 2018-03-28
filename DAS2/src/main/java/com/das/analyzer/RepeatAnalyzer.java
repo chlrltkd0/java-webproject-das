@@ -1,14 +1,18 @@
-package com.das.biz.model.pattern;
+package com.das.analyzer;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class RepeatAnalyer {
+import com.das.biz.model.action.Moving;
+import com.das.biz.model.pattern.Pattern;
+
+public class RepeatAnalyzer {
 	private List<Pair> dayList = new ArrayList<>();
 	private List<Pair> dateList = new ArrayList<>();
 	private String[] dayMap = new String[] {"", "일", "월", "화", "수", "목", "금", "토"};
 	
-	public RepeatAnalyer() {
+	public RepeatAnalyzer() {
 		super();
 		for(int i=1; i<dayMap.length; i++) {
 			dayList.add(new Pair(dayMap[i], 0));
@@ -113,6 +117,16 @@ public class RepeatAnalyer {
 				return p;
 		}
 		return null;
+	}
+	
+	public List<String> getRepeatList(Pattern pattern){
+		for(Moving moving : pattern.getMovingList()) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(moving.getStartTime());
+			plusDay(cal.get(Calendar.DAY_OF_WEEK));
+			plusDate(cal.get(Calendar.DATE));
+		}
+		return getRepeatStringList();
 	}
 	
 	class Pair{

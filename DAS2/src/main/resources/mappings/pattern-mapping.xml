@@ -7,8 +7,7 @@
 <!-- 	움직임 패턴 분석할때 기존에 있는 링크들을 로딩 -->
 	<select id="getPatternList" parameterType="int" resultMap="PatternResultSet">
 		<![CDATA[
-			SELECT id, party_id, from_node_id, to_node_id FROM pattern_link
-			WHERE party_id = #{id}
+			SELECT * FROM pattern WHERE party_id = #{partyId}
  		]]> 
 	</select>
 	

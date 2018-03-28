@@ -2,7 +2,7 @@ package com.das.biz.model.party;
 
 import java.util.ArrayList;
 
-import com.das.biz.model.path.PartyLocationCMD;
+import com.das.biz.model.partylocation.PartyLocationCMD;
 
 public class PartyAndLocationCMD {
 	

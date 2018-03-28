@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.das.biz.model.location.LocationVO;
-import com.das.biz.model.path.PartyLocationVO;
+import com.das.biz.model.partylocation.PartyLocationVO;
 
 /**
  * 상속처리 할수 있ㅁ으면 하도록 할것, Staying Moving Action  3ㄱ ㅐ*/

@@ -3,7 +3,7 @@ package com.das.biz.model.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.das.biz.model.path.PartyLocationVO;
+import com.das.biz.model.partylocation.PartyLocationVO;
 
 public class Action {
 	private List<PartyLocationVO> locationList = new ArrayList<>();

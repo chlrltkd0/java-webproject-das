@@ -34,6 +34,12 @@
  		]]> 
 	</select>
 	
+<!-- 	한번만가져오기 - 딜리버리에서 상대방 위치찾아올떄 -->
+	<select id="getLastPartyLocation" parameterType="hashmap" resultMap="PartyLocationResultSet">
+		<![CDATA[
+ 			select * from cur_location WHERE party_id=#{partyId} ORDER BY detect_time desc LIMIT 1
+ 		]]> 
+	</select>
 	
 	<resultMap type="PartyLocationVO" id="PartyLocationResultSet">
 			<result property="detectTime" column="detect_time"/>

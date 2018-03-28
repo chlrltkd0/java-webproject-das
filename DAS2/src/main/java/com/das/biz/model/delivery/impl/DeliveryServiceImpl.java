@@ -1,6 +1,8 @@
 package com.das.biz.model.delivery.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import com.das.biz.model.geo.GeoService;
 import com.das.biz.model.location.LocationVO;
 import com.das.biz.model.party.PartyService;
 import com.das.biz.model.party.PartyVO;
+import com.das.biz.model.partylocation.PartyLocationService;
 import com.das.biz.model.push.impl.PushAlarmServer;
 
 @Service
@@ -27,6 +30,8 @@ public class DeliveryServiceImpl implements DeliveryService{
 	private GeoService gService;
 	@Autowired
 	PushAlarmServer paServer;
+	@Autowired
+	private PartyLocationService plService;
 	
 	
 	public boolean insertDelivery(DeliveryVO dvo, PartyVO pvo) {
@@ -207,5 +212,19 @@ public class DeliveryServiceImpl implements DeliveryService{
 			}
 		}
 		return result;
+	}
+	@Override
+	public Map<String, LocationVO> getDeliveryCoords(DeliveryVO dvo, PartyVO pvo) {
+		Map<String, LocationVO> retMap = new HashMap<>();
+		dvo = deliveryDAO.getDeliveryWithRS(dvo);
+		if(pvo.getId() == dvo.getSenderId() || pvo.getId() == dvo.getDelivererId() || pvo.getId() == dvo.getReceiverId()) {
+			if(dvo.getSendingVO().isSenderConfirm()==false)
+				retMap.put("sender", plService.getLastPartyLocation(new PartyVO(dvo.getSenderId())).getLocation());
+			if(dvo.getReceivingVO().isReceiverConfirm()==false) {
+				retMap.put("deliverer", plService.getLastPartyLocation(new PartyVO(dvo.getDelivererId())).getLocation());
+				retMap.put("receiver", plService.getLastPartyLocation(new PartyVO(dvo.getReceiverId())).getLocation());
+			}
+		}
+		return retMap;
 	}
 }
