@@ -41,15 +41,6 @@ public class PatternController {
 		return pService.getPatternList(pvo, range);
 	}
 	
-	@RequestMapping("movePattern.do")
-	public String movePattern(PatternLink pl,Model model, HttpSession session) {
-		
-		PartyVO pvo = (PartyVO)session.getAttribute("party");
-//		mvo.setPartyId(pvo.getId());
-//		model.addAttribute("movePattern", mpService.getMovePattern(mvo));
-		return "movePattern.jsp";
-	}
-	
 	@RequestMapping("patternlist.do")
 	@ResponseBody
 	public List<PatternLink> myMovePattern(HttpSession session) {
