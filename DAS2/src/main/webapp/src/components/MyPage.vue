@@ -178,23 +178,23 @@
               <b-list-group>
                 <b-list-group-item variant="primary" class="flex-column align-items-start" href="#" v-on:click="">
                   <div class="d-flex justify-content-between">
-                    <b-col md="4"><h4>출발지</h4></b-col>
-                    <b-col md="1"><h4>-></h4></b-col>
-                    <b-col md="4"><h4>도착지</h4></b-col>
-                    <b-col md="1"><h4>횟수</h4></b-col>
-                    <b-col md="2"><h4><span class="badge badge-primary">반복여부</span></h4></b-col>
+                    <b-col md="4"><h6>출발지</h6></b-col>
+                    <b-col md="1"><h6>-></h6></b-col>
+                    <b-col md="4"><h6>도착지</h6></b-col>
+                    <b-col md="1"><h6>횟수</h6></b-col>
+                    <b-col md="2"><h6><span class="badge badge-primary">반복여부</span></h6></b-col>
                   </div>
                 </b-list-group-item>
                 <b-list-group-item v-for="pattern in patternList" variant="light" class="flex-column align-items-start" href="#" v-on:click="">
                   <div class="d-flex justify-content-between">
-                    <b-col md="4"><h5>{{pattern.fromLocation.address}}</h5></b-col>
-                    <b-col md="1"><h5>-></h5></b-col>
-                    <b-col md="4"><h5>{{pattern.toLocation.address}}</h5></b-col>
-                    <b-col md="1"><h5>{{pattern.repeatCount}}</h5></b-col>
+                    <b-col md="4"><h6>{{pattern.fromLocation.address}}</h6></b-col>
+                    <b-col md="1"><h6>-></h6></b-col>
+                    <b-col md="4"><h6>{{pattern.toLocation.address}}</h6></b-col>
+                    <b-col md="1"><h6>{{pattern.repeatCount}}</h6></b-col>
                     <b-col md="2">
-                      <h4>
-                        <span v-for="repeat in pattern.repeatList" class="badge badge-danger">{{repeat}} </span>
-                      </h4>
+                      <h6>
+                        <span v-for="repeat in pattern.repeatList" class="badge badge-danger">{{repeat}}</span>&nbsp;
+                      </h6>
                     </b-col>
                   </div>
                 </b-list-group-item>
