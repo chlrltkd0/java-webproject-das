@@ -16,4 +16,5 @@ public interface PartyService {
 	PartyListVO getPartyInfoList(PartyVO pvo, int page);
 	PartyVO getPartyInfo(int id, PartyVO myPvo);
 	boolean updatePartyInfo(PartyVO pvo, PartyVO myPvo);
+	List<PartyVO> getAllPartyList(PartyVO pvo);
 }

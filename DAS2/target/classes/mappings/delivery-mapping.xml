@@ -90,31 +90,26 @@
 	
 	<select id="getPartyListInDeliveryRange" parameterType="DeliveryVO" resultMap="PartyResultSet">
 	<![CDATA[
-		SELECT party.*, party.id as p_id FROM (SELECT * FROM party WHERE party.grade = #{grade}) as party JOIN (
-			SELECT *, pl.party_id as lp_id FROM pattern_link AS pl JOIN pattern_node AS pn1 ON pl.from_node_id=pn1.id 
-				JOIN pattern_node AS pn2 ON pl.to_node_id=pn2.id 
-					WHERE (pn1.latitude-0.01 <= #{sendingLatitude} and pn1.latitude+0.01 >= #{sendingLatitude})AND
-					(pn1.longitude-0.01 <= #{sendingLongitude} and pn1.longitude+0.01 >= #{sendingLongitude}) AND
-					(pn2.latitude-0.01 <= #{receivingLatitude} and pn2.latitude+0.01 >= #{sendingLatitude}) AND
-					(pn2.longitude-0.01 <= #{receivingLongitude} and pn2.longitude+0.01 >= #{sendingLongitude})) 
-		AS pattern ON party.id=pattern.lp_id
-		
+		SELECT party.* FROM (SELECT * FROM party WHERE grade = #{grade}) AS party JOIN
+			(SELECT * FROM pattern WHERE
+			(#{sendingLatitude} BETWEEN from_location_latitude-0.01 AND from_location_latitude+0.01) AND 
+			(#{sendingLongitude} BETWEEN from_location_longitude-0.01 AND from_location_longitude+0.01) AND 
+			(#{receivingLatitude} BETWEEN to_location_latitude-0.01 AND to_location_latitude+0.01) AND 
+			(#{receivingLongitude} BETWEEN to_location_longitude-0.01 AND to_location_longitude+0.01)) AS pattern
+		ON (party.id=pattern.party_id)
 	]]>
 	</select>
 	
 	<select id="getDeliveryInMyPattern" parameterType="PartyVO" resultMap="DeliveryResultSet">
 	<![CDATA[
-		SELECT * FROM (
-			SELECT pn1.latitude slatitude, pn1.longitude slongitude, 
-			pn2.latitude rlatitude, pn2.longitude rlongitude FROM 
-				(SELECT * FROM pattern_link WHERE party_id=#{id}) pl 
-			JOIN pattern_node pn1 ON (pl.from_node_id=pn1.id) 
-			JOIN pattern_node pn2 ON (pl.to_node_id=pn2.id)) AS pattern JOIN (SELECT * FROM delivery WHERE deliverer_id IS NULL) AS delivery	
-		ON (delivery.sending_latitude BETWEEN pattern.slatitude-0.01 AND pattern.slatitude+0.01) 
-		AND (delivery.sending_longitude BETWEEN pattern.slongitude-0.01 AND pattern.slongitude+0.01)
-		AND (delivery.receiving_latitude BETWEEN pattern.rlatitude-0.01 AND pattern.rlatitude+0.01) 
-		AND (delivery.receiving_longitude BETWEEN pattern.rlongitude-0.01 AND pattern.rlongitude+0.01)
-		AND delivery.grade <= #{grade}
+		SELECT d.* FROM
+			(SELECT * FROM pattern WHERE party_id=#{id}) AS p
+			JOIN delivery AS d ON (
+			(d.sending_latitude BETWEEN p.from_location_latitude-0.01 AND p.from_location_latitude+0.01) AND 
+			(d.sending_longitude BETWEEN p.from_location_longitude-0.01 AND p.from_location_longitude+0.01) AND 
+			(d.receiving_latitude BETWEEN p.to_location_latitude-0.01 AND p.to_location_latitude+0.01) AND 
+			(d.receiving_longitude BETWEEN p.to_location_longitude-0.01 AND p.to_location_longitude+0.01) 
+			)
 	]]>
 	</select>
 	

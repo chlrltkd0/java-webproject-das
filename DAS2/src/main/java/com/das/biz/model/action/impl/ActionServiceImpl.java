@@ -11,11 +11,14 @@ import com.das.analyzer.DayAnalyzer;
 import com.das.biz.model.action.ActionService;
 import com.das.biz.model.action.Moving;
 import com.das.biz.model.action.Staying;
+import com.das.biz.model.party.PartyService;
 import com.das.biz.model.party.PartyVO;
 
 @Service
 public class ActionServiceImpl implements ActionService {
 	
+	@Autowired
+	private PartyService pService;
 	@Autowired
 	private ActionDAO actionDAO;
 	@Autowired
@@ -62,12 +65,24 @@ public class ActionServiceImpl implements ActionService {
 
 	@Override
 	public void dayAnalysis(int targetId, PartyVO pvo, Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, 1);
-		Date endDate = new Date(cal.getTime().getTime());
+		if(pvo.getGrade() >= 10) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.DATE, 1);
+			Date endDate = new Date(cal.getTime().getTime());
+			dAnalyzer.dayAnalysis(new PartyVO(targetId), date, endDate);
+		}
+	}
+
+	@Override
+	public void dayAnalysisAll(PartyVO pvo, Date date) {
+		if(pvo.getGrade() >= 10) {
+			for(PartyVO target : pService.getAllPartyList()) {
+				dayAnalysis(target.getId(), pvo, date);
+			}
+		}
+
 		
-		dAnalyzer.dayAnalysis(new PartyVO(targetId), date, endDate);
 	}
 
 }

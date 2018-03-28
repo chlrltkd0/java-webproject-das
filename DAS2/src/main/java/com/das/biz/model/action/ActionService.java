@@ -14,4 +14,5 @@ public interface ActionService {
 	List<Moving> getMovingList(PartyVO pvo, Date startDate, Date endDate);
 	List<Staying> getStayingList(PartyVO pvo, Date startDate, Date endDate);
 	void dayAnalysis(int targetId, PartyVO pvo, Date startDate);
+	void dayAnalysisAll(PartyVO pvo, Date date);
 }

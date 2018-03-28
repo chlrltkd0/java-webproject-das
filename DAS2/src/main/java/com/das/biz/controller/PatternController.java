@@ -12,14 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.das.biz.commandobject.InsertPatternCMD;
 import com.das.biz.model.action.ActionService;
 import com.das.biz.model.party.PartyAndLocationCMD;
 import com.das.biz.model.party.PartyService;
 import com.das.biz.model.party.PartyVO;
-import com.das.biz.model.path.PatternLink;
-import com.das.biz.model.path.PatternService;
+import com.das.biz.model.path.PartyLocationService;
 import com.das.biz.model.pattern.Pattern;
+import com.das.biz.model.pattern.PatternService;
 
 @Controller
 public class PatternController {
@@ -30,47 +29,51 @@ public class PatternController {
 	PartyService paService;
 	@Autowired
 	ActionService aService;
+	@Autowired
+	PartyLocationService plService;
 	
 	@RequestMapping("insertLocation.do")
 	@ResponseBody
 	public boolean insertLocation(@RequestBody PartyAndLocationCMD pl, HttpSession session) {
-		return pService.insertCurLocation(pl);
+		return plService.insertCurLocation(pl);
+	}
+	
+	@RequestMapping("getRangePatternList.do")
+	@ResponseBody
+	public List<Pattern> getRangePatternList(@RequestParam(value="range")int range, PartyVO target, HttpSession session){
+		PartyVO pvo = (PartyVO)session.getAttribute("party");
+		return pService.getRangePatternList(pvo, range);
 	}
 	
 	@RequestMapping("getPatternList.do")
 	@ResponseBody
 	public List<Pattern> getPatternList(@RequestParam(value="range")int range, PartyVO target, HttpSession session){
 		PartyVO pvo = (PartyVO)session.getAttribute("party");
-		return pService.getPatternList(pvo, range);
-	}
-	
-	@RequestMapping("patternlist.do")
-	@ResponseBody
-	public List<PatternLink> myMovePattern(HttpSession session) {
-		PartyVO pvo = (PartyVO)session.getAttribute("party");
-		return pService.getPatternWithNodeList(pvo);
+		return pService.getRangePatternList(pvo, range);
 	}
 
-	@RequestMapping("addPattern.do")
+	@RequestMapping("dayAnalysis.do")
 	@ResponseBody
-	public boolean insertPatternProc(InsertPatternCMD ipCMD, HttpSession session) {
-		PartyVO pvo = (PartyVO)session.getAttribute("party");
-		return pService.insertPattern(ipCMD, pvo);
-	}
-	
-	@RequestMapping("moveGenerate.do")
-	@ResponseBody
-	public boolean moveGenerate(PartyVO pvo, HttpSession session) {
-		PartyVO paramPVO = (PartyVO)session.getAttribute("party");
-		return pService.moveGenerate(paramPVO, pvo.getId());
-	}
-	
-	@RequestMapping("analysis.do")
-	@ResponseBody
-	public void anlaysis(
+	public void dayAnalysis(
 			@RequestParam(value="partyId")int targetId,
 			@RequestParam(value="date")Date date, HttpSession session) {
 		PartyVO pvo = (PartyVO)session.getAttribute("party");
 		aService.dayAnalysis(targetId, pvo, date);
+	}
+	
+	@RequestMapping("dayAnalysisAll.do")
+	@ResponseBody
+	public void dayAnlaysisAll(
+			@RequestParam(value="date")Date date, HttpSession session) {
+		PartyVO pvo = (PartyVO)session.getAttribute("party");
+		aService.dayAnalysisAll(pvo, date);
+	}
+	
+	@RequestMapping("patternAnalysisAll.do")
+	@ResponseBody
+	public void patternAnlaysisAll(
+			@RequestParam(value="range")int range, HttpSession session) {
+		PartyVO pvo = (PartyVO)session.getAttribute("party");
+		pService.patternAnalysisAll(pvo, range);
 	}
 }

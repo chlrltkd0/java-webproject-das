@@ -2,75 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="PatternLinkDAO">
+<mapper namespace="PatternDAO">
 	
 <!-- 	움직임 패턴 분석할때 기존에 있는 링크들을 로딩 -->
-	<select id="getPatternLinkList" parameterType="int" resultMap="PatternLinkResultSet">
+	<select id="getPatternList" parameterType="int" resultMap="PatternResultSet">
 		<![CDATA[
 			SELECT id, party_id, from_node_id, to_node_id FROM pattern_link
 			WHERE party_id = #{id}
  		]]> 
 	</select>
 	
-<!-- 	새로 만든 패턴링크들을 저장 -->
-	<insert id="insertPatternLink" parameterType="PatternLink">
+	<insert id="insertPatternList" parameterType="hashmap">
 		<![CDATA[
-			INSERT INTO pattern_link(id, party_id, from_node_id, to_node_id)
-			VALUES (#{id}, #{partyId}, #{fromNodeId}, #{toNodeId})
+			INSERT INTO pattern VALUES
  		]]> 
+ 		<foreach collection="list" item="item" index="index" separator=",">
+			<![CDATA[
+            	(nextVal('seq4Pattern'), #{item.partyId}, #{item.fromLocation.address}, #{item.fromLocation.latitude}, #{item.fromLocation.longitude}, #{item.toLocation.address}, #{item.toLocation.latitude}, #{item.toLocation.longitude}, #{repeatCount})
+            ]]>
+        </foreach>
 	</insert>
 	
-<!-- 	패턴리스트를 사용자 화면에 뿌려줄때 -->
-	<select id="getPatternWithNodeList" parameterType="int" resultMap="PatternLinkWithPatternNodeResultSet">
+	<select id="genId" resultType="int">
 		<![CDATA[
-			SELECT 	l.id as l_id,
-				l.party_id,
-				l.from_node_id, 
-				l.to_node_id,
-				l.party_id,
-				fn.id as fn_id,
-				fn.latitude as fn_latitude,
-				fn.longitude as fn_longitude,
-				fn.address as fn_address,
-				fn.locweight as fn_locweight,
-				tn.id as tn_id,
-				tn.latitude as tn_latitude,
-				tn.longitude as tn_longitude,
-				tn.address as tn_address,
-				tn.locweight as tn_locweight
-			FROM pattern_link l JOIN pattern_node fn ON (l.from_node_id=fn.id) 
-			JOIN pattern_node tn ON (l.to_node_id=tn.id) WHERE l.party_id = #{idx};
- 		]]> 
+			SELECT nextVal('seq4Pattern')
+		]]>
+
 	</select>
-<!-- 	FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF[ 충분히 더 줄일수 있는 쿼리 ] -->
-	<resultMap type="PatternLink" id="PatternLinkResultSet">
-		<id property="id" column="id" />
-		<result property="fromNodeId" column="from_node_id" />
-		<result property="toNodeId" column="to_node_id" />
-	</resultMap>
 	
-	<resultMap type="PatternLink" id="PatternLinkWithPatternNodeResultSet">
+	<delete id="deletePatternAll">
+		<![CDATA[
+			DELETE FROM pattern
+ 		]]> 
+	</delete>
+	
+	<resultMap type="Pattern" id="PatternResultSet">
 		<id property="id" column="id" />
 		<result property="partyId" column="party_id"/>
-		<result property="fromNodeId" column="from_node_id" />
-		<result property="toNodeId" column="to_node_id" />
-		<association property="fromNode" javaType="PatternNode">
-			<id property="id" column="fn_id" />
-			<result property="locWeight" column="fn_locweight" />
-			<association property="location" javaType="LocationVO">
-				<result property="address" column="fn_address" />
-				<result property="latitude" column="fn_latitude" />
-				<result property="longitude" column="fn_longitude" />
-			</association>
+		<result property="repeatCount" column="repeat_count" />
+		<association property="fromLocation" javaType="LocationVO">
+			<result property="address" column="from_location_address" />
+			<result property="latitude" column="from_location_latitude" />
+			<result property="longitude" column="from_location_longitude" />
 		</association>
-		<association property="toNode" javaType="PatternNode">
-			<id property="id" column="tn_id" />
-			<result property="locWeight" column="tn_locweight" />
-			<association property="location" javaType="LocationVO">
-				<result property="address" column="tn_address" />
-				<result property="latitude" column="tn_latitude" />
-				<result property="longitude" column="tn_longitude" />	
-			</association>
+		<association property="toLocation" javaType="LocationVO">
+			<result property="address" column="to_location_address" />
+			<result property="latitude" column="to_location_latitude" />
+			<result property="longitude" column="to_location_longitude" />	
 		</association>
 	</resultMap>
 </mapper>

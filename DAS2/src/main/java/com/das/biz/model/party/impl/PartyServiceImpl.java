@@ -49,6 +49,14 @@ public class PartyServiceImpl implements PartyService {
 		}
 		return retPVO;
 	}
+	
+	@Override
+	public List<PartyVO> getAllPartyList(PartyVO pvo) {
+		if(pvo.getGrade() >= 10) {
+			return partyDAO.getAllPartyList();
+		}
+		return null;
+	}
 
 	@Override
 	public boolean checkLoginId(PartyVO pvo) {

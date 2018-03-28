@@ -8,7 +8,8 @@ import com.das.biz.model.action.Moving;
 import com.das.biz.model.location.LocationVO;
 
 public class Pattern {
-	
+	private int id;
+	private int partyId;
 	private LocationVO fromLocation;
 	private LocationVO toLocation;
 	private int repeatCount = 0;
@@ -38,7 +39,12 @@ public class Pattern {
 		repeatAnalyzer.plusDate(cal.get(Calendar.DATE));
 		
 	}
-	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public void setRepeatList() {
 		this.repeatList = repeatAnalyzer.getRepeatStringList();
 	}
@@ -79,32 +85,37 @@ public class Pattern {
 	public void setRepeat(RepeatAnalyer repeat) {
 		this.repeatAnalyzer = repeat;
 	}
-	public Pattern(LocationVO fromLocation, LocationVO toLocation, int repeatCount, RepeatAnalyer repeat,
-			List<Moving> movingList, List<String> repeatList) {
+	public int getPartyId() {
+		return partyId;
+	}
+	public void setPartyId(int partyId) {
+		this.partyId = partyId;
+	}
+	public Pattern(int id, int partyId, LocationVO fromLocation, LocationVO toLocation, int repeatCount,
+			RepeatAnalyer repeatAnalyzer, List<Moving> movingList, List<String> repeatList) {
 		super();
+		this.id = id;
+		this.partyId = partyId;
 		this.fromLocation = fromLocation;
 		this.toLocation = toLocation;
 		this.repeatCount = repeatCount;
-		this.repeatAnalyzer = repeat;
+		this.repeatAnalyzer = repeatAnalyzer;
 		this.movingList = movingList;
 		this.repeatList = repeatList;
 	}
 	public Pattern() {
 		super();
 	}
-
 	public RepeatAnalyer getRepeatAnalyzer() {
 		return repeatAnalyzer;
 	}
-
 	public void setRepeatAnalyzer(RepeatAnalyer repeatAnalyzer) {
 		this.repeatAnalyzer = repeatAnalyzer;
 	}
-
 	@Override
 	public String toString() {
-		return "Pattern [fromLocation=" + fromLocation + ", toLocation=" + toLocation + ", repeatCount=" + repeatCount
-				+ ", repeatAnalyzer=" + repeatAnalyzer + ", movingList=" + movingList + ", repeatList=" + repeatList
-				+ "]";
+		return "Pattern [id=" + id + ", partyId=" + partyId + ", fromLocation=" + fromLocation + ", toLocation="
+				+ toLocation + ", repeatCount=" + repeatCount + ", repeatAnalyzer=" + repeatAnalyzer + ", movingList="
+				+ movingList + ", repeatList=" + repeatList + "]";
 	}
 }

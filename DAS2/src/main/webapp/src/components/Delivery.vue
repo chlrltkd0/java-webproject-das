@@ -90,10 +90,10 @@
                 <b-list-group>
                   <div id="chatarea">
                     <b-list-group-item v-for="(chat, index) in this.chatList" :key="index" class="d-flex justify-content-between align-items-center">
-                      <b-col md="2" v-if="chat.partyId==this.$store.state.party.id">나</div>
-                      <b-col md="2" v-if="chat.partyId!=this.$store.state.party.id">상대방</div>
-                      <b-col md="6">{{chat.message}}</div>
-                      <b-col md="4">{{new Date(chat.regDt)}}</div>
+                      <b-col md="2" v-if="chat.partyId==this.$store.state.party.id">나</b-col>
+                      <b-col md="2" v-if="chat.partyId!=this.$store.state.party.id">상대방</b-col>
+                      <b-col md="6">{{chat.message}}</b-col>
+                      <b-col md="4">{{new Date(chat.regDt)}}</b-col>
                     </b-list-group-item>
                   </div>
                   <div class="input-group mb-3">

@@ -7,8 +7,7 @@ import java.util.List;
 import com.das.biz.model.action.Moving;
 import com.das.biz.model.action.Staying;
 import com.das.biz.model.path.PartyLocationVO;
-import com.das.biz.model.path.PatternLink;
-import com.das.biz.model.path.PatternNode;
+import com.das.biz.model.pattern.Pattern;
 
 public class PartyVO {
 	private int id;
@@ -25,8 +24,7 @@ public class PartyVO {
     private List<PartyLocationVO> listLoc = new ArrayList<>();
     private List<Moving> listMoving = new ArrayList<>();
     private List<Staying> listStaying = new ArrayList<>();
-    private List<PatternLink> listLink = new ArrayList<>();
-    private List<PatternNode> listNode = new ArrayList<>();
+    private List<Pattern> listPattern = new ArrayList<>();
     
 	public int getId() {
 		return id;
@@ -94,18 +92,6 @@ public class PartyVO {
 	public void setListLoc(List<PartyLocationVO> listLoc) {
 		this.listLoc = listLoc;
 	}
-	public List<PatternLink> getListLink() {
-		return listLink;
-	}
-	public void setListLink(List<PatternLink> listLink) {
-		this.listLink = listLink;
-	}
-	public List<PatternNode> getListNode() {
-		return listNode;
-	}
-	public void setListNode(List<PatternNode> listNode) {
-		this.listNode = listNode;
-	}
 	public List<Moving> getListMoving() {
 		return listMoving;
 	}
@@ -118,13 +104,15 @@ public class PartyVO {
 	public void setListStaying(List<Staying> listStaying) {
 		this.listStaying = listStaying;
 	}
-	public PartyVO() {
-		super();
+	public List<Pattern> getListPattern() {
+		return listPattern;
+	}
+	public void setListPattern(List<Pattern> listPattern) {
+		this.listPattern = listPattern;
 	}
 	public PartyVO(int id, String name, String loginId, String loginPwd, int cash, int grade, int score,
 			int securityDeposit, Timestamp regDt, Timestamp lastLoginDt, List<PartyLocationVO> listLoc,
-			List<Moving> listMoving, List<Staying> listStaying, List<PatternLink> listLink,
-			List<PatternNode> listNode) {
+			List<Moving> listMoving, List<Staying> listStaying, List<Pattern> listPattern) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -139,8 +127,10 @@ public class PartyVO {
 		this.listLoc = listLoc;
 		this.listMoving = listMoving;
 		this.listStaying = listStaying;
-		this.listLink = listLink;
-		this.listNode = listNode;
+		this.listPattern = listPattern;
+	}
+	public PartyVO() {
+		super();
 	}
 	public PartyVO(int targetId) {
 		this.id = targetId;
@@ -149,7 +139,7 @@ public class PartyVO {
 	public String toString() {
 		return "PartyVO [id=" + id + ", name=" + name + ", loginId=" + loginId + ", loginPwd=" + loginPwd + ", cash="
 				+ cash + ", grade=" + grade + ", score=" + score + ", securityDeposit=" + securityDeposit + ", regDt="
-				+ regDt + ", lastLoginDt=" + lastLoginDt + ", listLoc=" + listLoc + ", listLink=" + listLink
-				+ ", listNode=" + listNode + "]";
+				+ regDt + ", lastLoginDt=" + lastLoginDt + ", listLoc=" + listLoc + ", listMoving=" + listMoving
+				+ ", listStaying=" + listStaying + ", listPattern=" + listPattern + "]";
 	}
 }

@@ -19,8 +19,6 @@
 		<typeAlias alias="LocationVO" type="com.das.biz.model.location.LocationVO"></typeAlias>
 		<typeAlias alias="SearchConditionVO" type="com.das.biz.model.delivery.SearchConditionVO"></typeAlias>
 		<typeAlias alias="PartyLocationVO" type="com.das.biz.model.path.PartyLocationVO"></typeAlias>
-		<typeAlias alias="PatternNode" type="com.das.biz.model.path.PatternNode"></typeAlias>
-		<typeAlias alias="PatternLink" type="com.das.biz.model.path.PatternLink"></typeAlias>
 		<typeAlias alias="DeliverySearchOption" type="com.das.biz.model.delivery.DeliverySearchOption"></typeAlias>
 		<typeAlias alias="ChattingVO" type="com.das.biz.model.chatting.ChattingVO"></typeAlias>
 		<typeAlias alias="StartEndDateVO" type="com.das.biz.model.chart.StartEndDateVO"></typeAlias>
@@ -31,6 +29,7 @@
 		<typeAlias alias="BoardListVO" type="com.das.biz.model.board.BoardListVO"></typeAlias>
 		<typeAlias alias="Moving" type="com.das.biz.model.action.Moving"></typeAlias>
 		<typeAlias alias="Staying" type="com.das.biz.model.action.Staying"></typeAlias>
+		<typeAlias alias="Pattern" type="com.das.biz.model.pattern.Pattern"></typeAlias>
 	</typeAliases>
 	
 	<mappers>
@@ -41,8 +40,7 @@
 		<mapper resource="mappings/delivery-mapping.xml"/>
 		<mapper resource="mappings/location-mapping.xml"/>
 		<mapper resource="mappings/partylocation-mapping.xml"/>
-		<mapper resource="mappings/patternlink-mapping.xml"/>
-		<mapper resource="mappings/patternnode-mapping.xml"/>
+		<mapper resource="mappings/pattern-mapping.xml"/>
 		<mapper resource="mappings/chatting-mapping.xml"/>
 		<mapper resource="mappings/chart-mapping.xml"/>
 		<mapper resource="mappings/pushdata-mapping.xml"/>

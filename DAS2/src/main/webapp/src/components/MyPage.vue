@@ -169,7 +169,7 @@
             </b-col>
             <b-col md="1">
               <div>
-                <b-button v-on:click="getPatternList" class="mb-3">검색</b-button>
+                <b-button v-on:click="getRangePatternList" class="mb-3">검색</b-button>
              </div>
             </b-col>
           </b-row>
@@ -246,7 +246,7 @@ export default {
     minuteConvert : function(time){
       return Math.round(time/60000) + "분";
     },
-    getPatternList : function(){
+    getRangePatternList : function(){
       if(this.selected!=null){
         this.$http({
           method : 'post',

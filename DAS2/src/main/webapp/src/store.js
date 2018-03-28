@@ -143,7 +143,7 @@ export const store = new Vuex.Store({
     getPatternList : function(context) {
       axios({
         method : 'post',
-        url : 'patternlist.do'
+        url : 'getPatternList.do'
       }).then((response) => {
         context.commit('setPatternList', response.data);
       }).catch((error) => {

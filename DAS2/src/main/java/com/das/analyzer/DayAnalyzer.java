@@ -2,7 +2,6 @@ package com.das.analyzer;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +14,24 @@ import com.das.biz.model.action.Staying;
 import com.das.biz.model.geo.GeoService;
 import com.das.biz.model.location.LocationVO;
 import com.das.biz.model.party.PartyVO;
+import com.das.biz.model.path.PartyLocationService;
 import com.das.biz.model.path.PartyLocationVO;
-import com.das.biz.model.path.PatternService;
 
 @Component
 public class DayAnalyzer {
 	
 	@Autowired
-	private PatternService pService;
+	PartyLocationService plService;
 	@Autowired
-	private ActionService aService;
+	ActionService aService;
 	@Autowired
-	private GeoService gService;
+	GeoService gService;
 	
 	static final int MOVING_STANDARDS = 4;
 	
 	public void dayAnalysis(PartyVO pvo, Date startDate, Date endDate) {
 
-		pvo.setListLoc(pService.getPartyLocationList(pvo, startDate, endDate));
+		pvo.setListLoc(plService.getPartyLocationList(pvo, startDate, endDate));
 		List<Moving> todayMovingList = new ArrayList<>();
 		List<Staying> todayStayingList = new ArrayList<>();
 		List<Action> todayActionList;
@@ -40,8 +39,10 @@ public class DayAnalyzer {
 		todayActionList = createActionList(pvo.getListLoc());
 		createMovingStayingList(todayActionList, todayMovingList, todayStayingList);
 		
-		aService.insertMovingList(pvo, todayMovingList);
-		aService.insertStayingList(pvo, todayStayingList);
+		if(todayMovingList.size()!=0)
+			aService.insertMovingList(pvo, todayMovingList);
+		if(todayStayingList.size()!=0)
+			aService.insertStayingList(pvo, todayStayingList);
 	}
 	
 	private void createMovingStayingList(List<Action> al, List<Moving> ml, List<Staying> sl) {
