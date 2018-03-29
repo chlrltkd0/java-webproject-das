@@ -36,6 +36,14 @@ public class PartyController {
 		return partyVO;
 	}
 	
+	@RequestMapping("isLogin.do")
+	@ResponseBody
+	public PartyVO isLogin(HttpSession session) {
+		PartyVO pvo = (PartyVO)session.getAttribute("party");
+		System.out.println(pvo);
+		return pvo;
+	}
+	
 	@RequestMapping("logout.do")
 	@ResponseBody
 	public void logoutProc(HttpSession session) {

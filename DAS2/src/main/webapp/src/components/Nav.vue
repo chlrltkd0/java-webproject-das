@@ -45,6 +45,9 @@ export default {
       login : false
     }
   },
+  created : function(){
+    this.$store.dispatch('isLogin');
+  },
   methods : {
     gotoAdmin : function(){
       this.$router.push('/adminchart');

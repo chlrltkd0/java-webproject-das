@@ -98,7 +98,6 @@ export const store = new Vuex.Store({
           (error) => {
             console.log(error);
             context.commit('setLocation', {latitude:37.5533118, longitude:126.9705856});
-            // alert('GPS에서 오류가 발생하였습니다. - default 서울역 세팅');
           })
       } else {
         context.commit('setLocation', {latitude:37.5533118, longitude:126.9705856});
@@ -250,5 +249,19 @@ export const store = new Vuex.Store({
         })
       }
     },
+    isLogin : function(context, payload){
+      console.log('isLogin');
+      axios({
+        method : 'post',
+        url : 'isLogin.do'
+      }).then((response) => {
+        console.log(response);
+        if(response.data!=""){
+          context.commit('setParty', response.data);
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
   }
 })

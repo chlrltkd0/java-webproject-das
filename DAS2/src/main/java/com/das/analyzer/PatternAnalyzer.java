@@ -42,7 +42,7 @@ public class PatternAnalyzer {
 		}
 		
 		for(Pattern pattern : patternList) {
-			pattern.setRepeatList(new RepeatAnalyzer().getRepeatStringList());
+			pattern.setRepeatList(new RepeatAnalyzer().getRepeatList(pattern));
 			pattern.setRepeatCount(pattern.getMovingList().size());
 			pattern.setPartyId(pvo.getId());
 			pattern.setFromLocation(gService.getAddress(pattern.getFromLocation()));
