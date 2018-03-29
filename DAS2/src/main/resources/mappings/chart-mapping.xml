@@ -3,17 +3,31 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ChartDAO">
-
-	<select id="getDeliveryVolume" parameterType="StartEndDateVO" resultMap="ChartResultSet">
+	
+	<select id="getSales" parameterType="StartEndDateVO" resultMap="ChartResultSet">
 		<![CDATA[
- 			SELECT r.receiving_dt AS date, count(*) AS count FROM delivery AS d JOIN receiving AS r ON d.id=r.id 
- 			WHERE r.receiving_dt >= #{startDate} AND r.receiving_dt <= #{endDate} GROUP BY r.receiving_dt ORDER BY r.receiving_dt;
+			SELECT to_char(receiving.receiving_dt, 'MM-DD') AS key, SUM(charge_amt/10) AS value 
+				FROM (SELECT * FROM receiving WHERE receiving_dt BETWEEN #{startDate} AND #{endDate}) AS receiving
+					JOIN delivery on delivery.id=receiving.id GROUP BY key ORDER BY key;
  		]]> 
 	</select>
 	
-	<resultMap type="DeliveryVolumeVO" id="ChartResultSet">
-		<result property="date" column="date" />
-		<result property="count" column="count" />
+	<select id="getLocationRanking" parameterType="int" resultMap="ChartResultSet">
+		<![CDATA[
+ 			SELECT split_part(d.address, ' ', #{range}) AS key, count(*) AS value FROM
+ 			 (select sending_loc as address from delivery UNION ALL select receiving_loc from delivery) AS d GROUP BY key ORDER BY value desc;
+ 		]]> 
+	</select>
+	
+	<select id="getDeliveryVolume" parameterType="String" resultMap="ChartResultSet">
+		<![CDATA[
+ 			SELECT to_char(receiving.receiving_dt, #{option}) AS key, COUNT(*) AS value FROM receiving WHERE receiving.receiver_confirm=true GROUP BY key;
+ 		]]> 
+	</select>
+	
+	<resultMap type="ChartVO" id="ChartResultSet">
+		<result property="key" column="key" />
+		<result property="value" column="value" />
 	</resultMap>
 
 </mapper>

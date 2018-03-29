@@ -179,6 +179,8 @@ export const store = new Vuex.Store({
       }).then((response) => {
         if(response.data==true){
           alert('배송자 신청이 완료되었습니다.');
+        } else {
+          alert('보증금이 부족합니다.');
         }
       }).catch((error) => {
         console.log(error);
@@ -229,6 +231,24 @@ export const store = new Vuex.Store({
       }).then((response) => {
         context.commit('setBoardList', response.data);
       })
-    }
+    },
+    partyUpdate : function(context, payload){
+      if(context.state.party!=null){
+        axios({
+          method : 'post',
+          url : 'updateParty.do'
+        }).then((response) => {
+          if(response.data==null){
+            context.commit('setParty', null);
+            alert("세션이 끊어졌습니다. 다시로그인 해주세요");
+          } else {
+            context.commit('setParty', response.data);
+          }
+        }).catch((error) => {
+          context.commit('setParty', null);
+          alert("세션이 끊어졌습니다. 다시로그인 해주세요");
+        })
+      }
+    },
   }
 })

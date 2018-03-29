@@ -13,7 +13,6 @@
     <b-col cols="8">
       <b-form-textarea id="content"
                        v-model="content"
-                       placeholder="Enter something"
                        :cols="6"
                        :rows="12"
                        :max-rows="12">

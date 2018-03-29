@@ -44,9 +44,12 @@ public class PartyServiceImpl implements PartyService {
 	@Override
 	public PartyVO getParty(PartyVO pvo) {
 		PartyVO retPVO = partyDAO.getParty(pvo);
-		if(retPVO!=null) {
-			
-		}
+		return retPVO;
+	}
+	
+	@Override
+	public PartyVO getPartyById(int partyId) {
+		PartyVO retPVO = partyDAO.getPartyById(partyId);
 		return retPVO;
 	}
 	

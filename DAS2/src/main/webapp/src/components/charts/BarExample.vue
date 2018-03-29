@@ -1,20 +1,15 @@
 <script>
-import { Bar } from 'vue-chartjs'
+import { Bar, mixins } from 'vue-chartjs'
+
+const { reactiveProp } = mixins;
 
 export default {
   extends: Bar,
+  mixins: [mixins.reactiveProp],
+  props: ['barChartData'],
   mounted () {
     // Overwriting base render method with actual data.
-    this.renderChart({
-      labels: ['월요일', '화요일', '수요일', '목요일', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [
-        {
-          label: 'GitHub Commits',
-          backgroundColor: '#f87979',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        }
-      ]
-    })
+    this.renderChart(this.chartData, {responsive: true, maintainAspectRatio: false});
   }
 }
 </script>

@@ -22,7 +22,7 @@
 		<typeAlias alias="DeliverySearchOption" type="com.das.biz.model.delivery.DeliverySearchOption"></typeAlias>
 		<typeAlias alias="ChattingVO" type="com.das.biz.model.chatting.ChattingVO"></typeAlias>
 		<typeAlias alias="StartEndDateVO" type="com.das.biz.model.chart.StartEndDateVO"></typeAlias>
-		<typeAlias alias="DeliveryVolumeVO" type="com.das.biz.model.chart.DeliveryVolumeVO"></typeAlias>
+		<typeAlias alias="ChartVO" type="com.das.biz.model.chart.ChartVO"></typeAlias>
 		<typeAlias alias="PushData" type="com.das.biz.model.push.PushData"></typeAlias>
 		<typeAlias alias="BoardVO" type="com.das.biz.model.board.BoardVO"></typeAlias>
 		<typeAlias alias="BoardCategoryVO" type="com.das.biz.model.board.BoardCategoryVO"></typeAlias>

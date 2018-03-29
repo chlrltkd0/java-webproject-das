@@ -4,7 +4,6 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import DeliveryList from './components/DeliveryList.vue'
 import Delivery from './components/Delivery.vue'
-import PatternList from './components/PatternList.vue'
 import AddMovePattern from './components/AddMovePattern.vue'
 import AdminChart from './components/AdminChart.vue'
 import DeliveryMap from './components/DeliveryMap.vue'
@@ -23,7 +22,6 @@ export default [
   {path: '/register', component : Register},
   {path: '/deliverylist', component : DeliveryList},
   {path: '/delivery', component : Delivery},
-  {path: '/patternlist', component : PatternList},
   {path: '/addmovepattern', component : AddMovePattern},
   {path: '/adminchart', component : AdminChart},
   {path: '/deliverymap', component : DeliveryMap},

@@ -276,6 +276,8 @@ export default {
         if(response.data!=null){
           this.$store.commit('setDelivery', response.data);
           alert('배송자 선택완료');
+        } else {
+          alert('상대방의 보증금이 부족합니다!');
         }
       }).catch((error) => {
         console.log(error);

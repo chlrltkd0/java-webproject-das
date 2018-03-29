@@ -42,6 +42,13 @@ public class PartyController {
 		session.invalidate();
 	}
 	
+	@RequestMapping("updateParty.do")
+	@ResponseBody
+	public PartyVO updateParty(HttpSession session) {
+		PartyVO pvo = (PartyVO)session.getAttribute("party");
+		return pvo;
+	}
+	
 	@RequestMapping("checkid.do")
 	@ResponseBody
 	public boolean checkId(PartyVO pvo) {

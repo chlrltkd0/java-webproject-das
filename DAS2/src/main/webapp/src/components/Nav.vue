@@ -19,8 +19,6 @@
                 <b-dropdown-item v-on:click="gotoDeliveryListForSender">나의 배송신청 목록</b-dropdown-item>
                 <b-dropdown-item v-on:click="gotoDeliveryListForWaitDeliverer">나의 배송자신청 대기 목록</b-dropdown-item>
                 <b-dropdown-item v-on:click="gotoDeliveryListForDeliverer">내가 배달중인 목록</b-dropdown-item>
-                <b-dropdown-item v-on:click="gotoAAAAAAAAAAAAAAA">내가 배송 가능한 목록</b-dropdown-item>
-                <b-dropdown-item v-on:click="gotoPatternList">이동패턴 관리</b-dropdown-item>
                 <b-dropdown-item v-on:click="gotoLogout">로그아웃</b-dropdown-item>
               </b-nav-item-dropdown>
               <b-nav-item-dropdown v-if="this.$store.state.party != null && this.$store.state.party.grade >= 10" text="관리자 메뉴" right>
@@ -53,10 +51,6 @@ export default {
     },
     gotoRequestDelivery : function(){
       this.$router.push('/requestdelivery');
-    },
-    gotoPatternList : function(){
-      this.$store.dispatch('getPatternList');
-      this.$router.push('/patternlist');
     },
     gotoMain : function(){
       this.$router.push('/');

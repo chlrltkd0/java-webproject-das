@@ -1,23 +1,14 @@
 <script>
-import { Pie } from 'vue-chartjs'
+import { Pie, mixins } from 'vue-chartjs'
+
+const { reactiveProp } = mixins;
 
 export default {
   extends: Pie,
+  props:["chartData"],
+  mixins: [mixins.reactiveProp],
   mounted () {
-    this.renderChart({
-      labels: ['서울', '부산', '대구', '광주'],
-      datasets: [
-        {
-          backgroundColor: [
-            'red',
-            'black',
-            'green',
-            'blue'
-          ],
-          data: [430, 206, 808, 180]
-        }
-      ]
-    }, {responsive: true, maintainAspectRatio: false})
+    this.renderChart(this.chartData, {responsive: true, maintainAspectRatio: false});
   }
 }
 </script>

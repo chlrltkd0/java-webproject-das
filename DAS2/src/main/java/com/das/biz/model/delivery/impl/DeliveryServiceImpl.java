@@ -39,10 +39,10 @@ public class DeliveryServiceImpl implements DeliveryService{
 		
 		PartyVO checkPVO = pService.getParty(pvo);
 		
-		if(checkPVO.getCash() >= dvo.getChargeAmt())
+		if(checkPVO.getCash() >= dvo.getChargeAmt() && dvo.getChargeAmt()>=100)
 		{
+			dvo.setChargeAmt((dvo.getChargeAmt()/100)*100);
 			checkPVO.setCash(dvo.getChargeAmt());
-			pService.minusCash(checkPVO);
 			
 			int id = deliveryDAO.genId();
 			dvo.setId(id);
@@ -64,13 +64,20 @@ public class DeliveryServiceImpl implements DeliveryService{
 			
 			result = deliveryDAO.insertDelivery(dvo)==1;
 			paServer.addDelivery(deliveryDAO.getDelivery(dvo));
+			if(result==true) {
+				pService.minusCash(checkPVO);
+			}
 		}
 		return result;
 	}
 	@Override
 	public boolean applyForDeliverer(DeliveryVO dvo, PartyVO pvo) {
-		dvo.setDelivererId(pvo.getId());
-		boolean result = deliveryDAO.insertDelivererApplication(dvo)==0;
+		boolean result = false;
+		dvo = deliveryDAO.getDelivery(dvo);
+		if(pvo.getSecurityDeposit() > dvo.getItemValue()) {
+			dvo.setDelivererId(pvo.getId());
+			result = deliveryDAO.insertDelivererApplication(dvo)==1;
+		}
 		return result;
 	}
 	
@@ -78,18 +85,23 @@ public class DeliveryServiceImpl implements DeliveryService{
 	public DeliveryVO setDeliverer(DeliveryVO dvo, PartyVO pvo) {
 		boolean r1 = false;
 		boolean r2 = false;
+		DeliveryVO retdvo = null;
 		DeliveryVO checkDvo = deliveryDAO.getDelivery(dvo);
-		
+		PartyVO deliverer = pService.getPartyById(dvo.getDelivererId());
 		if(checkDvo.getSenderId() == pvo.getId()) {
 			//원래 신청했는지까지 검증을 해야지 정석인것 같음 셀렉트해가지고 deliverId를 갖고있는애가 진짜 신청을했는지 지금은 안하고 넘어감
-			if(deliveryDAO.updateDelivererId(dvo)!=0) {
-				r1 = deliveryDAO.insertSending(dvo)==0 ? false : true;
-				r2 = deliveryDAO.insertReceiving(dvo)==0 ? false : true;
-				if(r1 && r2) 
-					checkDvo = getDelivery(dvo, pvo);
+			System.out.println(checkDvo);
+			System.out.println(deliverer);
+			if(deliverer.getSecurityDeposit() >= checkDvo.getItemValue()) {
+				if(deliveryDAO.updateDelivererId(dvo)!=0) {
+					r1 = deliveryDAO.insertSending(dvo)==0 ? false : true;
+					r2 = deliveryDAO.insertReceiving(dvo)==0 ? false : true;
+					if(r1 && r2) 
+						retdvo = getDelivery(dvo, pvo);
+				}
 			}
 		}		
-		return checkDvo;
+		return retdvo;
 	}
 
 	@Override
@@ -196,9 +208,9 @@ public class DeliveryServiceImpl implements DeliveryService{
 			result = deliveryDAO.confirmReceivingForReceiver(dvo) == 1;
 			if(result == true) {
 				
-				int cash = (int)Math.round(dvo.getChargeAmt()*0.8d);
-				int securityDeposit = (int)Math.round(dvo.getChargeAmt()*0.1d);
-				int fees = (int)Math.round(dvo.getChargeAmt()*0.1d);
+				int cash = (dvo.getChargeAmt()*8)/10;
+				int securityDeposit = dvo.getChargeAmt()/10;
+				int fees = dvo.getChargeAmt()/10;
 				
 				PartyVO delivererPVO = new PartyVO();
 				
