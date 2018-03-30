@@ -262,6 +262,18 @@ export const store = new Vuex.Store({
       }).catch((error) => {
         console.log(error);
       });
+    },
+    getBoardCategory : function(context, payload){
+      axios({
+        method : 'post',
+        url : 'getBoardCategoryList.do'
+      }).then((response) => {
+        console.log(response.data);
+        context.commit('setBoardCategorys', response.data);
+      }).catch((error) => {
+        console.log(error);
+        console.log('서버측 문제로 홈페이지 정보를 제대로 받아오지 못했습니다.');
+      })
     }
   }
 })

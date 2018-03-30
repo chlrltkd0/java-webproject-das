@@ -47,6 +47,7 @@ export default {
   },
   created : function(){
     this.$store.dispatch('isLogin');
+    this.$store.dispatch('getBoardCategory');
   },
   methods : {
     gotoAdmin : function(){
