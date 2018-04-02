@@ -61,7 +61,7 @@ export default {
         }
       }).then((response) => {
         if(response.data==""){
-          alert('아이디 비밀번호가 올바르지 않습니다.')
+          console.log('아이디 비밀번호가 올바르지 않습니다.')
         } else {
           this.$store.commit('setuserinfo', response.data);
           this.$router.push('/');
@@ -74,12 +74,12 @@ export default {
             this.$store.commit('setboardcategorys', response.data);
           }).catch((error) => {
             console.log(error);
-            alert('서버측 문제로 홈페이지 정보를 제대로 받아오지 못했습니다.');
+            console.log('서버측 문제로 홈페이지 정보를 제대로 받아오지 못했습니다.');
           })
         }
       }).catch(function(error){
         console.log(error)
-        alert('서버측 에러로 로그인 할 수 없습니다.')
+        console.log('서버측 에러로 로그인 할 수 없습니다.')
       })
     }
   }

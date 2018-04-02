@@ -12,6 +12,7 @@ import com.das.analyzer.PatternAnalyzer;
 import com.das.biz.model.party.PartyService;
 import com.das.biz.model.party.PartyVO;
 import com.das.biz.model.pattern.Pattern;
+import com.das.biz.model.pattern.PatternDay;
 import com.das.biz.model.pattern.PatternService;
 
 @Service
@@ -31,6 +32,27 @@ public class PatternServiceImpl implements PatternService {
 			for(PartyVO target : pService.getAllPartyList()) {
 				patternList.addAll(getRangePatternList(target, range));
 			}
+			List<PatternDay> patternDayList = new ArrayList<>();
+			//수정해야함 2번 일을하고있음 분석기에서 0123456를 월화수목금토일 로바꿔놓고 다시 바꾸는중 이거 구조자체를 바꿔야됨 Repeat분석기 구조가 잘못됨
+			for(Pattern pattern : patternList) {
+				for(String string : pattern.getRepeatList()) {
+					if(string.equals("일"))
+						patternDayList.add(new PatternDay(pattern.getId(), 0));
+					else if(string.equals("월"))
+						patternDayList.add(new PatternDay(pattern.getId(), 1));
+					else if(string.equals("화"))
+						patternDayList.add(new PatternDay(pattern.getId(), 2));
+					else if(string.equals("수"))
+						patternDayList.add(new PatternDay(pattern.getId(), 3));
+					else if(string.equals("목"))
+						patternDayList.add(new PatternDay(pattern.getId(), 4));
+					else if(string.equals("금"))
+						patternDayList.add(new PatternDay(pattern.getId(), 5));
+					else if(string.equals("토"))
+						patternDayList.add(new PatternDay(pattern.getId(), 6));
+				}
+			}
+			pDAO.insertPatternDayList(patternDayList);
 			return pDAO.insertPatternList(patternList);
 		}
 		return false;
@@ -42,7 +64,7 @@ public class PatternServiceImpl implements PatternService {
 	}
 	
 	@Override
-	public List<Pattern> getRangePatternList(PartyVO target, int range) {
+	public List<Pattern> getRangePatternList(PartyVO target, int range) { 
 		Date endDate = new Date(System.currentTimeMillis());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(endDate);

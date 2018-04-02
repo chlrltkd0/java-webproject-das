@@ -35,11 +35,11 @@ export default {
           this.$store.dispatch('sendPushData');
           this.$router.push('/');
         } else {
-          alert('아이디 비밀번호가 올바르지 않습니다.');
+          console.log('아이디 비밀번호가 올바르지 않습니다.');
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러가 발생하였습니다.')
+        console.log('에러가 발생하였습니다.')
       });
     }
   }

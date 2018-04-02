@@ -4,7 +4,6 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import DeliveryList from './components/DeliveryList.vue'
 import Delivery from './components/Delivery.vue'
-import AddMovePattern from './components/AddMovePattern.vue'
 import AdminChart from './components/AdminChart.vue'
 import DeliveryMap from './components/DeliveryMap.vue'
 import BBS from './components/BBS.vue'
@@ -22,7 +21,6 @@ export default [
   {path: '/register', component : Register},
   {path: '/deliverylist', component : DeliveryList},
   {path: '/delivery', component : Delivery},
-  {path: '/addmovepattern', component : AddMovePattern},
   {path: '/adminchart', component : AdminChart},
   {path: '/deliverymap', component : DeliveryMap},
   {path: '/bbs', component : BBS},

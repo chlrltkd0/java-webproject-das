@@ -194,7 +194,7 @@ export default {
         }
       }).then((response) => {
         if(response.data==false){
-          alert('실패');
+          console.log('실패');
         };
       }).catch((error) => {
         console.log(error);

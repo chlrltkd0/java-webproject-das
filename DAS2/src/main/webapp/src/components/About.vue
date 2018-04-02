@@ -2,7 +2,7 @@
   <div class="about">
     <header class="masthead bg-warning text-white text-center">
   <div class="container">
-    <h1 class="text-uppercase mb-0">DELIVERY AGENCY</h1>
+    <h1 class="brand">DELIVERY AGENCY</h1>
     <hr class="mb-5">
     <h2 class="font-weight-light mb-0">내가 니 물건을 안전하게 갖다줄게!</h2>
   </div>
@@ -47,7 +47,7 @@ export default {
     }
   },
   created : function(){
-    this.$store.dispatch('partyUpdate');
+    this.$store.dispatch('isLogin');
   }
 }
 </script>

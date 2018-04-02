@@ -9,9 +9,10 @@
               <div class="col-lg-8 mx-auto">
                 <form>
                   <div class="control-group">
-                    <div class="form-group controls mb-0 pb-2">
-                      <input type="text" class="form-control" v-model="receiverId" id="inputReceiverId" placeholder="받는사람" required="required" data-validation-required-message="받는사람을 입력해 주세요.">
-                    </div>
+                    <b-form-input v-model="receiverLoginId" v-on:input="inputest" list="browsers"/>
+                    <datalist id="browsers">
+                      <option v-for="party in partyList">{{party.loginId}}</option>
+                    </datalist>
                   </div>
                   <div style="padding: 8px; border: 1px solid gray; border-radius: 12px;" class="control-group">
                     <label>보내는 주소</label>
@@ -71,21 +72,25 @@
                   <div class="control-group my-3">
                     <div class="row">
                       <div class="col-xs-4 col-md-4">
-                        <b-form-input v-model="chargeAmt" type="text" placeholder="거래금액"/>
+                        <b-form-input v-model="chargeAmt" type="text" placeholder="수수료"/>
                       </div>
                     	<div class="col-xs-4 col-md-4">
-  				             <input type="text" class="form-control" v-model="sendingType" id="inputSendingType" placeholder="보낼방식" required="required" data-validation-required-message="보낼방식을 입력해 주세요.">
+                        <b-form-select v-model="sendingType" :options="sendingOptions" class="mb-3">
+                        </b-form-select>
   				            </div>
   				            <div class="col-xs-4 col-md-4">
-  				              <input type="text" class="form-control" v-model="receivingType" id="inputReceivingType" placeholder="받을방식" required="required" data-validation-required-message="받을방식을 입력해 주세요.">
+                        <b-form-select v-model="receivingType" :options="receivingOptions" class="mb-3" />
   				            </div>
                     </div>
                   </div>
                   <h2 class="text-center text-uppercase text-secondary mb-0">물건 정보</h2>
             		  <hr class="star-dark mb-5">
             		  <div class="control-group">
+                    <div class="col-xs-2 col-md-2">
+
+                    </div>
                     <div class="form-group controls mb-0 pb-2">
-                      <input type="text" class="form-control" v-model="itemType" id="inputItemType"  placeholder="타입" required="required" data-validation-required-message="타입을 입력해 주세요.">
+                      <b-form-select v-model="itemType" :options="itemOptions" class="mb-3" />
                     </div>
                   </div>
                   <div class="control-group">
@@ -142,17 +147,60 @@ export default {
       itemHeight : '',
       itemLenght : '',
       itemWeight : '',
-      itemValue : ''
+      itemValue : '',
+      sendingOptions : [
+        {value : null, text : '발송방식'},
+        {value : '방문발송', text : '방문발송'},
+        {value : '직접발송', text : '직접발송'}
+      ],
+      receivingOptions : [
+        {value : null, text : '수령방식'},
+        {value : '방문수령', text : '방문수령'},
+        {value : '직접수령', text : '직접수령'}
+      ],
+      itemOptions : [
+        {value : null, text : '아이템타입'},
+        {value : '의류', text : '의류'},
+        {value : '서류', text : '서류'},
+        {value : '책', text : '책'},
+        {value : '박스', text : '박스'},
+        {value : '쇼핑백', text : '쇼핑백'},
+        {value : '전자기기', text : '전자기기'},
+        {value : '음식', text : '음식'}
+      ],
+      partyList : []
     }
   },
   methods : {
+    inputest : function(){
+      if(this.receiverLoginId.length>=2){
+        this.$http({
+          method : 'post',
+          url : 'getReceiverList.do',
+          params : {
+            word : this.receiverLoginId
+          }
+        }).then((response) => {
+          if(response.data!=null){
+            this.partyList = response.data
+          }
+        }).catch((error) => {
+          console.log(error);
+          console.log('에러가 발생하였습니다.');
+        })
+      }
+    },
     gotoBack : function(){
       this.$router.go(-1);
     },
     requestDeliveryProc : function(){
       var stime = new Date(this.sendingDt + " " + this.sendingTime).getTime();
       var rtime = new Date(this.receivingDt + " " + this.receivingTime).getTime();
-      console.log(stime, ' ㅋ ', rtime);
+      for(var index in this.partyList){
+        if(this.receiverLoginId==this.partyList[index].loginId){
+          this.receiverId = this.partyList[index].id;
+        }
+      }
       this.$http({
         method : 'post',
         url : 'requestdelivery.do',
@@ -174,14 +222,14 @@ export default {
         }
       }).then((response) => {
         if(response.data==true){
-          alert("정상적으로 등록되었습니다.");
+          console.log("정상적으로 등록되었습니다.");
           this.$router.push("/");
         } else {
-          alert('실패하였습니다.');
+          console.log('실패하였습니다.');
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러가 발생하였습니다.')
+        console.log('에러가 발생하였습니다.')
       })
     },
     foldDaumPostcode : function() {

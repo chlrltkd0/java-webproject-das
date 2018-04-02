@@ -60,10 +60,10 @@ export default {
            });
            this.$router.push('/bbs');
          } else {
-           alert('글을 등록하지 못했습니다.');
+           console.log('글을 등록하지 못했습니다.');
          }
        }).catch((error) => {
-         alert('로그인 해주세요.');
+         console.log('로그인 해주세요.');
          console.log(error);
        })
      }

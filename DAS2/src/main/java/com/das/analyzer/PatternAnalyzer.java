@@ -36,6 +36,7 @@ public class PatternAnalyzer {
 				pattern.addMoving(moving);
 			} else {
 				pattern = new Pattern();
+				pattern.setId(pService.genId());
 				pattern.addMoving(moving);
 				patternList.add(pattern);
 			}
@@ -55,7 +56,8 @@ public class PatternAnalyzer {
 	private Pattern includes(List<Pattern> pl, Moving moving) {
 		for(Pattern pattern : pl) {
 			if(pattern.getFromLocation().isVicinity(moving.getFromStaying().getLocation()) && 
-					pattern.getToLocation().isVicinity(moving.getToStaying().getLocation()))
+					pattern.getToLocation().isVicinity(moving.getToStaying().getLocation()) &&
+					pattern.timeCompare(moving))
 				return pattern;
 		}
 		return null;

@@ -8,7 +8,7 @@
 		<![CDATA[
 			INSERT INTO delivery (id, sender_id, receiver_id, sending_loc, sending_latitude, sending_longitude, receiving_loc, receiving_latitude, receiving_longitude, sending_dt, receiving_dt,
 			charge_amt, sending_type, receiving_type, item_type, item_width, item_length, item_height, item_weight, item_value) 
-			VALUES (#{id}, #{senderId}, #{receiverId}, #{sendingLoc}, #{sendingLatitude}, #{sendingLongitude}, #{receivingLoc}, #{receivingLatitude}, #{receivingLongitude}, now(), now(),
+			VALUES (#{id}, #{senderId}, #{receiverId}, #{sendingLoc}, #{sendingLatitude}, #{sendingLongitude}, #{receivingLoc}, #{receivingLatitude}, #{receivingLongitude}, #{sendingDt}, #{receivingDt},
 			#{chargeAmt}, #{sendingType}, #{receivingType}, #{itemType}, #{itemWidth}, #{itemLength}, #{itemHeight}, #{itemWeight}, #{itemValue})
 		]]>
 	</insert>
@@ -90,13 +90,16 @@
 	
 	<select id="getPartyListInDeliveryRange" parameterType="DeliveryVO" resultMap="PartyResultSet">
 	<![CDATA[
-		SELECT party.* FROM (SELECT * FROM party WHERE grade = #{grade}) AS party JOIN
+		SELECT DISTINCT party.* FROM (SELECT * FROM party WHERE grade = #{grade}) AS party JOIN
 			(SELECT * FROM pattern WHERE
 			(#{sendingLatitude} BETWEEN from_location_latitude-0.01 AND from_location_latitude+0.01) AND 
 			(#{sendingLongitude} BETWEEN from_location_longitude-0.01 AND from_location_longitude+0.01) AND 
 			(#{receivingLatitude} BETWEEN to_location_latitude-0.01 AND to_location_latitude+0.01) AND 
 			(#{receivingLongitude} BETWEEN to_location_longitude-0.01 AND to_location_longitude+0.01)) AS pattern
-		ON (party.id=pattern.party_id)
+		ON (party.id=pattern.party_id) JOIN pattern_day AS day ON pattern.id=day.pattern_id
+		WHERE extract(dow from '${sendingDt}'::date)=day.day_code AND pattern.start_first_time < #{sendingDt}::time AND
+		pattern.start_last_time >= #{sendingDt}::time AND pattern.end_first_time < #{receivingDt}::time AND
+		pattern.end_last_time >= #{receivingDt}::time
 	]]>
 	</select>
 	

@@ -2,7 +2,7 @@
   <div class="my-nav">
     <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" v-on:click="gotoMain">Delivery Agency</a>
+        <a class="navbar-brand" v-on:click="gotoMain">Delivery Agency</a>
         <b-navbar toggleable="md">
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
           <b-collapse is-nav id="nav_collapse">
@@ -19,6 +19,7 @@
                 <b-dropdown-item v-on:click="gotoDeliveryListForSender">나의 배송신청 목록</b-dropdown-item>
                 <b-dropdown-item v-on:click="gotoDeliveryListForWaitDeliverer">나의 배송자신청 대기 목록</b-dropdown-item>
                 <b-dropdown-item v-on:click="gotoDeliveryListForDeliverer">내가 배달중인 목록</b-dropdown-item>
+                <b-dropdown-item v-on:click="gotoDeliveryListForReceiver">나한테 배송오는 목록</b-dropdown-item>
                 <b-dropdown-item v-on:click="gotoLogout">로그아웃</b-dropdown-item>
               </b-nav-item-dropdown>
               <b-nav-item-dropdown v-if="this.$store.state.party != null && this.$store.state.party.grade >= 10" text="관리자 메뉴" right>
@@ -78,6 +79,12 @@ export default {
     gotoDeliveryListForDeliverer : function(){
       this.$store.dispatch('getDeliveryList', {
         delivererId : this.$store.state.party.id
+      });
+      this.$router.push('/deliverylist');
+    },
+    gotoDeliveryListForReceiver : function(){
+      this.$store.dispatch('getDeliveryList', {
+        receiverId : this.$store.state.party.id
       });
       this.$router.push('/deliverylist');
     },

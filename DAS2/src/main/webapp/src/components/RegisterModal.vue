@@ -81,15 +81,15 @@ export default {
         }).then((response) => {
           if(response.data==true){
             this.$emit('close');
-            alert('가입이 완료되었습니다. 이메일을 확인해 주세요');
+            console.log('가입이 완료되었습니다. 이메일을 확인해 주세요');
           }else{
-            alert('서버측 에러로 가입이 실패하였습니다.');
+            console.log('서버측 에러로 가입이 실패하였습니다.');
           }
         }).catch((error) => {
-          alert('서버측 에러로 가입이 실패하였습니다.');
+          console.log('서버측 에러로 가입이 실패하였습니다.');
         })
       } else {
-        alert('이미 가입된 이메일 이거나 비밀번호가 규칙에 맞지않습니다.');
+        console.log('이미 가입된 이메일 이거나 비밀번호가 규칙에 맞지않습니다.');
       }
     },
     emailchange : function(){

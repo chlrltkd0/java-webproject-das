@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.das.biz.model.party.PartyVO;
 import com.das.biz.model.pattern.Pattern;
+import com.das.biz.model.pattern.PatternDay;
 
 @Repository
 public class PatternDAO {
@@ -37,6 +38,12 @@ public class PatternDAO {
 	
 	public int genId() {
 		return mybatis.selectOne("PatternDAO.genId");
+	}
+
+	public void insertPatternDayList(List<PatternDay> patternDayList) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("list", patternDayList);
+		mybatis.selectOne("PatternDAO.insertPatternDayList", patternDayList);
 	}
 
 }

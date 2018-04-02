@@ -17,7 +17,18 @@
  		]]> 
  		<foreach collection="list" item="item" index="index" separator=",">
 			<![CDATA[
-            	(nextVal('seq4Pattern'), #{item.partyId}, #{item.fromLocation.address}, #{item.fromLocation.latitude}, #{item.fromLocation.longitude}, #{item.toLocation.address}, #{item.toLocation.latitude}, #{item.toLocation.longitude}, #{repeatCount})
+            	(#{item.id}, #{item.partyId}, #{item.fromLocation.address}, #{item.fromLocation.latitude}, #{item.fromLocation.longitude}, #{item.toLocation.address}, #{item.toLocation.latitude}, #{item.toLocation.longitude}, #{item.startFirstTime}, #{item.startLastTime}, #{item.endFirstTime}, #{item.endLastTime}, #{item.repeatCount})
+            ]]>
+        </foreach>
+	</insert>
+	
+	<insert id="insertPatternDayList" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO pattern_day VALUES
+ 		]]> 
+ 		<foreach collection="list" item="item" index="index" separator=",">
+			<![CDATA[
+            	(#{item.patternId}, #{item.dayCode})
             ]]>
         </foreach>
 	</insert>
@@ -26,7 +37,6 @@
 		<![CDATA[
 			SELECT nextVal('seq4Pattern')
 		]]>
-
 	</select>
 	
 	<delete id="deletePatternAll">

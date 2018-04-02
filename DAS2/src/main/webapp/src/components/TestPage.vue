@@ -59,7 +59,7 @@ export default {
         }
       }).then((response) => {
         if(response.data==true){
-          alert('분석 완료')
+          console.log('분석 완료')
         }
       }).catch((error) => {
         console.log(error);
@@ -74,7 +74,7 @@ export default {
         }
       }).then((response) => {
         if(response.data==true){
-          alert('분석 완료')
+          console.log('분석 완료')
         }
       }).catch((error) => {
         console.log(error);
@@ -89,7 +89,7 @@ export default {
         }
       }).then((response) => {
         if(response.data==true){
-          alert('분석 완료')
+          console.log('분석 완료')
         }
       }).catch((error) => {
         console.log(error);

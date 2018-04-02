@@ -50,7 +50,7 @@
 
         <b-list-group-item v-for="(delivery, index) in this.$store.state.deliverylist" href="#" class="flex-column align-items-start" v-on:click="drawDeliveryPath(delivery)">
           <div class="d-flex justify-content-between">
-            <small class="text-muted mb-3">{{delivery.sendingDt}} ~ {{delivery.receivingDt}}</small>
+            <small class="text-muted mb-3">{{new Date(delivery.sendingDt).toLocaleString()}} ~ {{new Date(delivery.receivingDt).toLocaleString()}}</small>
             <b-button type="button" class="my-3" size="sm" variant="outline-success" v-on:click="gotoDeliveryModal(delivery.id)">상세보기</b-button>
           </div>
           <h6 class="mb-3 "><span class="badge badge-primary">출발</span>{{delivery.sendingLoc.substr(delivery.sendingLoc.indexOf(' '))}}</h6>

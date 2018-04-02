@@ -1,13 +1,11 @@
 <template lang="html">
 <div class="register">
   <div class="container">
-  <br><br>
+  <br><br><br><br>
     <h2 class="text-center text-uppercase text-secondary mb-0">회원가입</h2>
     <hr class="star-dark mb-5">
     <div class="row">
       <div class="col-lg-6 mx-auto">
-        <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
-        <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
         <b-form action="register.do" name="sentMessage" id="contactForm" novalidate="novalidate">
           <div class="control-group">
             <div class="form-group controls mb-0 pb-2">
@@ -84,16 +82,16 @@ export default {
           }
         }).then((response) => {
           if(response.data==true){
-            alert("회원가입 성공 이메일을 확인해 주세요.");
+            console.log("회원가입 성공 이메일을 확인해 주세요.");
             this.$router.push('/');
           } else {
-            alert("회원가입이 실패하였습니다.");
+            console.log("회원가입이 실패하였습니다.");
           }
         }).catch((error) => {
-          alert("에러가 발생하였습니다.");
+          console.log("에러가 발생하였습니다.");
         })
       } else {
-        alert("아이디와 비밀번호를 확인해 주세요");
+        console.log("아이디와 비밀번호를 확인해 주세요");
       }
     },
     checkPw : function(){

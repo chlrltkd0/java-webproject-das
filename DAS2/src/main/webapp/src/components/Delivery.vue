@@ -194,7 +194,7 @@ export default {
       return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     },
     startGetCoords : function(){
-      this.coordsInterval = setInterval(this.requestCoords, 60000);
+      this.coordsInterval = setInterval(this.requestCoords, 2000);
     },
     stopGetCoords : function(){
       clearInterval(this.coordsInterval);
@@ -275,13 +275,13 @@ export default {
       }).then((response) => {
         if(response.data!=null){
           this.$store.commit('setDelivery', response.data);
-          alert('배송자 선택완료');
+          console.log('배송자 선택완료');
         } else {
-          alert('상대방의 보증금이 부족합니다!');
+          console.log('상대방의 보증금이 부족합니다!');
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러발생');
+        console.log('에러발생');
       })
     },
     confirmSendingForSender : function(){
@@ -292,13 +292,13 @@ export default {
       }).then((response) => {
         if(response.data==true){
           this.$store.commit('setTrueSS');
-          alert('발송자 확인이 완료되었습니다.');
+          console.log('발송자 확인이 완료되었습니다.');
         } else {
-          alert('발송자 확인이 실패하였습니다.');
+          console.log('발송자 확인이 실패하였습니다.');
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러발생');
+        console.log('에러발생');
       })
     },
     confirmSendingForDeliverer : function(){
@@ -309,13 +309,13 @@ export default {
       }).then((response) => {
         if(response.data==true){
           this.$store.commit('setTrueSD');
-          alert('배송자 확인이 완료되었습니다.');
+          console.log('배송자 확인이 완료되었습니다.');
         } else {
-          alert('배송자 확인이 실패하였습니다.');
+          console.log('배송자 확인이 실패하였습니다.');
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러발생');
+        console.log('에러발생');
       })
     },
     confirmReceivingForDeliverer : function(){
@@ -326,13 +326,13 @@ export default {
       }).then((response) => {
         if(response.data==true){
           this.$store.commit('setTrueRD');
-          alert('배송자 확인이 완료되었습니다.');
+          console.log('배송자 확인이 완료되었습니다.');
         } else {
-          alert('배송자 확인이 실패하였습니다.');
+          console.log('배송자 확인이 실패하였습니다.');
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러발생');
+        console.log('에러발생');
       })
     },
     confirmReceivingForReceiver : function(){
@@ -343,13 +343,13 @@ export default {
       }).then((response) => {
         if(response.data==true){
           this.$store.commit('setTrueRR');
-          alert('수령자 확인이 완료되었습니다.');
+          console.log('수령자 확인이 완료되었습니다.');
         } else {
-          alert('수령자 확인이 실패하였습니다.');
+          console.log('수령자 확인이 실패하였습니다.');
         }
       }).catch((error) => {
         console.log(error);
-        alert('에러발생');
+        console.log('에러발생');
       })
     }
   }

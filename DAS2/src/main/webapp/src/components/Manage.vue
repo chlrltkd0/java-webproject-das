@@ -128,7 +128,7 @@ export default {
         this.$store.commit("setBoardCategorys", response.data);
       }).catch((error) => {
         console.log(error);
-        alert('서버측 문제로 홈페이지 정보를 제대로 받아오지 못했습니다.');
+        console.log('서버측 문제로 홈페이지 정보를 제대로 받아오지 못했습니다.');
       })
     },
     getCategory : function(data){
@@ -140,7 +140,7 @@ export default {
         this.boardCategory = response.data;
       }).catch((error) => {
         console.log(error);
-        alert('서버측 문제로 홈페이지 정보를 제대로 받아오지 못했습니다.');
+        console.log('서버측 문제로 홈페이지 정보를 제대로 받아오지 못했습니다.');
       })
     },
     insertCategory : function(){

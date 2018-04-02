@@ -1,5 +1,7 @@
 package com.das.biz.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +42,9 @@ public class PartyController {
 	@ResponseBody
 	public PartyVO isLogin(HttpSession session) {
 		PartyVO pvo = (PartyVO)session.getAttribute("party");
-		System.out.println(pvo);
-		return pvo;
+		if(pvo!=null)
+			return pService.getPartyById(pvo.getId());
+		return null;
 	}
 	
 	@RequestMapping("logout.do")
@@ -49,14 +52,7 @@ public class PartyController {
 	public void logoutProc(HttpSession session) {
 		session.invalidate();
 	}
-	
-	@RequestMapping("updateParty.do")
-	@ResponseBody
-	public PartyVO updateParty(HttpSession session) {
-		PartyVO pvo = (PartyVO)session.getAttribute("party");
-		return pvo;
-	}
-	
+
 	@RequestMapping("checkid.do")
 	@ResponseBody
 	public boolean checkId(PartyVO pvo) {
@@ -68,6 +64,13 @@ public class PartyController {
 	public PartyListVO getPartyInfoList(@RequestParam(value="page")int page, HttpSession session) {
 		PartyVO pvo = (PartyVO)session.getAttribute("party");
 		return pService.getPartyInfoList(pvo, page);
+	}
+	
+	@RequestMapping("getReceiverList.do")
+	@ResponseBody
+	public List<PartyVO> getReceiverList(@RequestParam(value="word")String word, HttpSession session) {
+//		PartyVO myPvo = (PartyVO)session.getAttribute("party");
+		return pService.getReceiverList(word);
 	}
 	
 	@RequestMapping("getPartyInfo.do")

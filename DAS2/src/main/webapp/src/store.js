@@ -101,7 +101,7 @@ export const store = new Vuex.Store({
           })
       } else {
         context.commit('setLocation', {latitude:37.5533118, longitude:126.9705856});
-        alert('GPS를 지원히지 않습니다. - default 서울역 세팅');
+        console.log('GPS를 지원히지 않습니다. - default 서울역 세팅');
       }
     },
     getDeliveryList : function(context, param){
@@ -113,7 +113,7 @@ export const store = new Vuex.Store({
         context.commit('setDeliveryList', response.data);
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       });
     },
     getDeliveryListForDelivery : function(context, param){
@@ -125,7 +125,7 @@ export const store = new Vuex.Store({
         context.commit('setDeliveryList', response.data);
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       });
     },
     getDeliveryListForWaitDeliverer : function(context){
@@ -136,7 +136,7 @@ export const store = new Vuex.Store({
         context.commit('setDeliveryList', response.data);
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       });
     },
     getPatternList : function(context) {
@@ -147,7 +147,7 @@ export const store = new Vuex.Store({
         context.commit('setPatternList', response.data);
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       });
     },
     getPatternListInMyPattern : function(context){
@@ -158,7 +158,7 @@ export const store = new Vuex.Store({
         context.commit('setDeliveryList', response.data);
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       });
     },
     logout : function(context) {
@@ -177,13 +177,13 @@ export const store = new Vuex.Store({
         }
       }).then((response) => {
         if(response.data==true){
-          alert('배송자 신청이 완료되었습니다.');
+          console.log('배송자 신청이 완료되었습니다.');
         } else {
-          alert('보증금이 부족합니다.');
+          console.log('보증금이 부족합니다.');
         }
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       });
     },
     getDelivery : function(context, param){
@@ -195,11 +195,11 @@ export const store = new Vuex.Store({
         if(response.data != null){
           context.commit('setDelivery', response.data);
         } else {
-          alert('그런값이 없습니다.')
+          console.log('그런값이 없습니다.')
         }
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       })
     },
     sendPushData : function(context, param){
@@ -215,7 +215,7 @@ export const store = new Vuex.Store({
 
       }).catch((error) => {
         console.log(error);
-        alert('값을 제대로 가져오지 못했습니다.');
+        console.log('값을 제대로 가져오지 못했습니다.');
       })
     },
     getBoardList : function(context, payload){
@@ -231,33 +231,16 @@ export const store = new Vuex.Store({
         context.commit('setBoardList', response.data);
       })
     },
-    partyUpdate : function(context, payload){
-      if(context.state.party!=null){
-        axios({
-          method : 'post',
-          url : 'updateParty.do'
-        }).then((response) => {
-          if(response.data==null){
-            context.commit('setParty', null);
-            alert("세션이 끊어졌습니다. 다시로그인 해주세요");
-          } else {
-            context.commit('setParty', response.data);
-          }
-        }).catch((error) => {
-          context.commit('setParty', null);
-          alert("세션이 끊어졌습니다. 다시로그인 해주세요");
-        })
-      }
-    },
     isLogin : function(context, payload){
       console.log('isLogin');
       axios({
         method : 'post',
         url : 'isLogin.do'
       }).then((response) => {
-        console.log(response);
         if(response.data!=""){
           context.commit('setParty', response.data);
+        } else {
+          context.commit('setParty', null);
         }
       }).catch((error) => {
         console.log(error);

@@ -132,4 +132,9 @@ public class PartyServiceImpl implements PartyService {
 		return result;
 	}
 
+	@Override
+	public List<PartyVO> getReceiverList(String word) {
+		return partyDAO.getReceiverList(word);
+	}
+
 }

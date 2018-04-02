@@ -74,4 +74,8 @@ public class PartyDAO {
 		return mybatis.selectOne("PartyDAO.getPartyCount");
 	}
 
+	public List<PartyVO> getReceiverList(String word) {
+		return mybatis.selectList("PartyDAO.getReceiverList", word);
+	}
+
 }

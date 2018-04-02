@@ -104,11 +104,23 @@
  		]]> 
 	</select>
 	
-		<select id="getPartyCount"  resultType="int">
+	<select id="getPartyCount"  resultType="int">
 		<![CDATA[
  			SELECT count(*) FROM party
  		]]> 
 	</select>
+	
+	<select id="getReceiverList" parameterType="string" resultMap="PartySmallResultSet">
+		<![CDATA[
+ 			SELECT id, name, login_id FROM party WHERE name LIKE '%'||#{word}||'%' OR login_id LIKE '%'||#{word}||'%'
+ 		]]> 
+	</select>
+	
+	<resultMap type="PartyVO" id="PartySmallResultSet">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="loginId" column="login_id" />
+	</resultMap>
 	
 	<resultMap type="PartyVO" id="PartyResultSet">
 		<id property="id" column="id" />

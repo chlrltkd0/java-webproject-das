@@ -36,7 +36,7 @@ export default {
         this.$store.commit('setBoard', response.data);
         this.$router.push('/board');
       }).catch(function(){
-        alert('서버측 에러로 데이터를 전송받지 못했습니다.')
+        console.log('서버측 에러로 데이터를 전송받지 못했습니다.')
       })
     },
     getBoardListSearch : function(event){
